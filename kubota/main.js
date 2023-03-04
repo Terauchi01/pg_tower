@@ -1,7 +1,7 @@
 // Canvas要素の取得
 const canvas = document.getElementById("myCanvas");
-canvas.width = 500;
-canvas.height = 500;
+canvas.width = document.documentElement.scrollWidth;
+canvas.height = document.documentElement.scrollHeight;
 const ctx = canvas.getContext("2d");
 
 // 画像の読み込み
@@ -28,19 +28,23 @@ Promise.all(imgPaths.map(path => {
   let x = 0;
   let y = 0;
 
+  let x2 = 0;
+  let y2 = 0;
+
   // 画像を描画する関数
   function drawImage() {
     // 最初に1回だけclearRectを呼ぶ
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     //x, yを更新することで画像の座標を変更できる
     ctx.drawImage(images[2], x, y);
-    ctx.drawImage(images[3], y, x);
+    ctx.drawImage(images[3], x2, y2);
     ctx.drawImage(images[4], player.lanes[0][0].pos[0], player.lanes[0][0].pos[1]);
   }
 
   function mainLoop() {
     //ここに繰り返したいものを書く
-    if (y < canvas.height - images[0].height) y++;
+    if (y < canvas.height - images[2].height) y++;
+    if (x2 < canvas.width - images[3].width) x2++;
     drawImage();
     requestAnimationFrame(mainLoop);
   }
