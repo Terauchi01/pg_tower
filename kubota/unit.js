@@ -8,8 +8,15 @@ class Unit {
         this.unitTypeId = unitTypeId;
         this.unitId = unitId;
         this.isCooperate = false;
+        this.isMove = true;
     }
 
+    update() {
+        if (!this.isMove) {
+            return;
+        }
+        this.pos[1] -= this.speed;
+    }
     //attack(obj) { }
 };
 
@@ -19,6 +26,7 @@ class Soldier extends Unit {
     }
 
     attack(obj) {
+        this.isMove = false;
         let damage = this.atk;
         if (obj.constructor === Lancer) damage *= 2;
         if (this.isCooperate) damage *= 2;
@@ -32,6 +40,7 @@ class Lancer extends Unit {
     }
 
     attack(obj) {
+        this.isMove = false;
         let damage = this.atk;
         if (obj.constructor === Cavalry) damage *= 2;
         if (this.isCooperate) damage *= 2;
@@ -45,6 +54,7 @@ class Cavalry extends Unit {
     }
 
     attack(obj) {
+        this.isMove = false;
         let damage = this.atk;
         if (obj.constructor === Soldier) damage *= 2;
         if (this.isCooperate) damage *= 2;
