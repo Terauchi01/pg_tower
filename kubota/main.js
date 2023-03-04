@@ -9,7 +9,7 @@ const imgPaths = ["Image/rico.png", "Image/test1.png"];
 const images = [];
 
 const player = new Player();
-player.addUnit(1, new Soldier(1, 1, 10, 1, 1));
+player.addUnit(0, new Soldier(100, 200, 10, 1, 1));
 
 Promise.all(imgPaths.map(path => {
   return new Promise((resolve, reject) => {
@@ -35,6 +35,7 @@ Promise.all(imgPaths.map(path => {
     //x, yを更新することで画像の座標を変更できる
     ctx.drawImage(images[0], x, y);
     ctx.drawImage(images[1], y, x);
+    ctx.drawImage(images[0], player.lanes[0][0].pos[0], player.lanes[0][0].pos[1]);
   }
 
   function mainLoop() {

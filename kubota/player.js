@@ -4,10 +4,10 @@ class Player {
     }
 
     addUnit(index, element) {
-        this.lanes[index-1].push(element);
+        this.lanes[index].push(element);
     }
 
     eraseUnit(index) {
-        this.lanes[index-1].shift();
+        this.lanes[index].shift();
     }
 };
