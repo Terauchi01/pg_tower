@@ -9,7 +9,7 @@ const imgPaths = ["Image/rico.png", "Image/test1.png"];
 const images = [];
 
 const player = new Player();
-player.addUnit(1, new Soldier(1, 1, 1, 1, 1, 1));
+player.addUnit(1, new Soldier(1, 1, 10, 1, 1));
 
 Promise.all(imgPaths.map(path => {
   return new Promise((resolve, reject) => {
