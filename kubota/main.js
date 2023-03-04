@@ -12,7 +12,9 @@ const player = new Player();
 player.addUnit(0, new Soldier(100, 200, 10, 1, 1));
 player.addUnit(1, new Lancer(200, 300, 10, 1, 2));
 player.addUnit(2, new Cavalry(300, 200, 10, 1, 3));
-
+player.addUnit(0, new Soldier(100, 400, 10, 1, 4));
+player.addUnit(1, new Lancer(200, 500, 10, 1, 5));
+player.addUnit(2, new Cavalry(300, 400, 10, 1, 6));
 
 Promise.all(imgPaths.map(path => {
   return new Promise((resolve, reject) => {
@@ -52,10 +54,10 @@ Promise.all(imgPaths.map(path => {
 
   function mainLoop() {
     //ここに繰り返したいものを書く
-    for (ary of player.lanes) {
-      for (obj of ary) {
+    for (let i = 0; i < 3; i++) {
+      for (obj of player.lanes[i]) {
         obj.move();
-        if (obj.pos[1] < 0) obj.isMove = false;
+        if (obj.pos[1] < 0) player.eraseUnit(i);
       }
     }
 
