@@ -10,16 +10,18 @@ const images = [];
 
 const player = new Player();
 
-player.addUnit(0, new Soldier(100, 400, 10, 1, 4));
-player.addUnit(1, new Cavalry(200, 500, 10, 1, 5));
-player.addUnit(2, new Cavalry(300, 400, 10, 1, 6));
+const lanePosx = [canvas.width/4,canvas.width/2 ,canvas.width/4*3];
 
-player.addUnit(0, new Soldier(100, canvas.height, 10, 1, 1));
-player.addUnit(1, new Lancer(200, canvas.height, 10, 1, 2));
-player.addUnit(2, new Cavalry(300, canvas.height, 10, 1, 3));
+player.addUnit(0, new Soldier(lanePosx[0], 400, 10, 1, 4));
+player.addUnit(1, new Cavalry(lanePosx[1], 500, 10, 1, 5));
+player.addUnit(2, new Cavalry(lanePosx[2], 400, 10, 1, 6));
+
+player.addUnit(0, new Soldier(lanePosx[0], canvas.height, 10, 1, 1));
+player.addUnit(1, new Lancer(lanePosx[1], canvas.height, 10, 1, 2));
+player.addUnit(2, new Cavalry(lanePosx[2], canvas.height, 10, 1, 3));
 
 const enemy = new Player();
-enemy.addUnit(0, new Soldier(300, canvas.height, 10, 2, 7));
+enemy.addUnit(0, new Soldier(lanePosx[2], canvas.height, 10, 2, 7));
 
 Promise.all(imgPaths.map(path => {
   return new Promise((resolve, reject) => {
