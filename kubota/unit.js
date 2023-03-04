@@ -11,8 +11,10 @@ class Unit {
         this.isMove = true;
     }
 
-    move() {
-        if (!this.isMove) return;
+    update() {
+        if (!this.isMove) {
+            return;
+        }
         this.pos[1] -= this.speed;
     }
     //attack(obj) { }

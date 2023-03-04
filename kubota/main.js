@@ -5,16 +5,21 @@ canvas.height = document.documentElement.scrollHeight;
 const ctx = canvas.getContext("2d");
 
 // 画像の読み込み
-const imgPaths = ["Image/rico.png", "Image/test1.png", "Image/soldier.png", "Image/lancer.png", "Image/cavalry.png"];
+const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png"];
 const images = [];
 
 const player = new Player();
-player.addUnit(0, new Soldier(100, 200, 10, 1, 1));
-player.addUnit(1, new Lancer(200, 300, 10, 1, 2));
-player.addUnit(2, new Cavalry(300, 200, 10, 1, 3));
+
 player.addUnit(0, new Soldier(100, 400, 10, 1, 4));
-player.addUnit(1, new Lancer(200, 500, 10, 1, 5));
+player.addUnit(1, new Cavalry(200, 500, 10, 1, 5));
 player.addUnit(2, new Cavalry(300, 400, 10, 1, 6));
+
+player.addUnit(0, new Soldier(100, canvas.height, 10, 1, 1));
+player.addUnit(1, new Lancer(200, canvas.height, 10, 1, 2));
+player.addUnit(2, new Cavalry(300, canvas.height, 10, 1, 3));
+
+const enemy = new Player();
+enemy.addUnit(0, new Soldier(300, canvas.height, 10, 2, 7));
 
 Promise.all(imgPaths.map(path => {
   return new Promise((resolve, reject) => {
@@ -39,13 +44,29 @@ Promise.all(imgPaths.map(path => {
       for (obj of ary) {
         switch (obj.constructor) {
           case Soldier:
-            ctx.drawImage(images[2], obj.pos[0], obj.pos[1]);
+            ctx.drawImage(images[0], obj.pos[0], obj.pos[1]);
             break;
           case Lancer:
-            ctx.drawImage(images[3], obj.pos[0], obj.pos[1]);
+            ctx.drawImage(images[1], obj.pos[0], obj.pos[1]);
             break;
           case Cavalry:
-            ctx.drawImage(images[4], obj.pos[0], obj.pos[1]);
+            ctx.drawImage(images[2], obj.pos[0], obj.pos[1]);
+            break;
+        }
+      }
+    }
+
+    for (ary of enemy.lanes) {
+      for (obj of ary) {
+        switch (obj.constructor) {
+          case Soldier:
+            ctx.drawImage(images[0], obj.pos[0], canvas.height - obj.pos[1]);
+            break;
+          case Lancer:
+            ctx.drawImage(images[1], obj.pos[0], canvas.height - obj.pos[1]);
+            break;
+          case Cavalry:
+            ctx.drawImage(images[2], obj.pos[0], canvas.height - obj.pos[1]);
             break;
         }
       }
@@ -54,10 +75,29 @@ Promise.all(imgPaths.map(path => {
 
   function mainLoop() {
     //ここに繰り返したいものを書く
-    for (let i = 0; i < 3; i++) {
+    //attack
+    for (let i = 0; i < player.lanes.length; i++) {
+      if (player.lanes[i].length == 0 || enemy.lanes[enemy.lanes.length - i - 1].length == 0) continue;
+      if(Math.abs(player.lanes[i][0].pos[1] - (canvas.height - enemy.lanes[enemy.lanes.length - i - 1][0].pos[1])) <= images[0].height) {
+        player.lanes[i][0].isMove = false;
+        enemy.lanes[enemy.lanes.length - i - 1][0].isMove = false;
+        player.lanes[i][0].attack(enemy.lanes[enemy.lanes.length - i - 1][0]);
+        enemy.lanes[enemy.lanes.length - i - 1][0].attack(player.lanes[i][0]);
+      }
+    }
+    
+    //move
+    for (let i = 0; i < player.lanes.length; i++) {
       for (obj of player.lanes[i]) {
-        obj.move();
-        if (obj.pos[1] < 0) player.eraseUnit(i);
+        obj.update();
+        if (obj.hp <= 0) player.eraseUnit(i);
+      }
+    }
+
+    for (let i = 0; i < enemy.lanes.length; i++) {
+      for (obj of enemy.lanes[i]) {
+        obj.update();
+        if (obj.hp <= 0) enemy.eraseUnit(i);
       }
     }
 
