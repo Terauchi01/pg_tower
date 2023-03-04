@@ -5,7 +5,7 @@ canvas.height = 500;
 const ctx = canvas.getContext("2d");
 
 // 画像の読み込み
-const imgPaths = ["Image/rico.png", "Image/test1.png"];
+const imgPaths = ["Image/rico.png", "Image/test1.png", "Image/cavalry.png", "Image/lancer.png", "Image/soldier.png"];
 const images = [];
 
 const player = new Player();
@@ -33,9 +33,9 @@ Promise.all(imgPaths.map(path => {
     // 最初に1回だけclearRectを呼ぶ
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     //x, yを更新することで画像の座標を変更できる
-    ctx.drawImage(images[0], x, y);
-    ctx.drawImage(images[1], y, x);
-    ctx.drawImage(images[0], player.lanes[0][0].pos[0], player.lanes[0][0].pos[1]);
+    ctx.drawImage(images[2], x, y);
+    ctx.drawImage(images[3], y, x);
+    ctx.drawImage(images[4], player.lanes[0][0].pos[0], player.lanes[0][0].pos[1]);
   }
 
   function mainLoop() {
