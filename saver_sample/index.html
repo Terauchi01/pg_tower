@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>WebSocket Example</title>
+  </head>
+  <body>
+    <input type="text" id="message">
+    <button id="send">Send</button>
+    <script>
+      const socket = new WebSocket('ws://localhost:8080');
+
+      socket.addEventListener('open', (event) => {
+        console.log('Connected!');
+      });
+
+      socket.addEventListener('message', (event) => {
+        console.log(`Received: ${event.data}`);
+      });
+
+      const sendButton = document.querySelector('#send');
+      const messageInput = document.querySelector('#message');
+
+      sendButton.addEventListener('click', () => {
+        const message = messageInput.value;
+        socket.send(message);
+      });
+    </script>
+  </body>
+</html>
