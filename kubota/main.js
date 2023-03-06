@@ -10,19 +10,25 @@ const images = [];
 
 const unitSize = [64, 64];
 const castleSize = [256, 256];
-const laneStartPos = [[canvas.width/2 - castleSize[0]/2 - unitSize[0], canvas.height - castleSize[1]/2 - unitSize[1]/2], 
-[canvas.width/2 - unitSize[0]/2, canvas.height - castleSize[1] - unitSize[1]], 
-[canvas.width/2 + castleSize[0]/2, canvas.height - castleSize[1]/2 - unitSize[1]/2]];
+const laneStartPos = [[canvas.width / 2 - castleSize[0] / 2 - unitSize[0], canvas.height - castleSize[1] / 2 - unitSize[1] / 2],
+[canvas.width / 2 - unitSize[0] / 2, canvas.height - castleSize[1] - unitSize[1]],
+[canvas.width / 2 + castleSize[0] / 2, canvas.height - castleSize[1] / 2 - unitSize[1] / 2]];
 
 const player = new Player(1);
 player.addUnit(0, new Lancer(laneStartPos[0][0], laneStartPos[0][1], 1, 0));
 player.addUnit(1, new Cavalry(laneStartPos[1][0], laneStartPos[1][1], 1, 1));
 player.addUnit(2, new Soldier(laneStartPos[2][0], laneStartPos[2][1], 1, 2));
+player.addUnit(0, new Lancer(laneStartPos[0][0], laneStartPos[0][1], 1, 0));
+player.addUnit(1, new Cavalry(laneStartPos[1][0], laneStartPos[1][1], 1, 1));
+player.addUnit(2, new Soldier(laneStartPos[2][0], laneStartPos[2][1], 1, 2));
 
 const enemy = new Player(2);
-enemy.addUnit(0, new Soldier(laneStartPos[0][0], laneStartPos[0][1], 2, 3));
+enemy.addUnit(0, new Soldier(laneStartPos[2][0], laneStartPos[0][1], 2, 3));
 enemy.addUnit(1, new Lancer(laneStartPos[1][0], laneStartPos[1][1], 2, 4));
-enemy.addUnit(2, new Cavalry(laneStartPos[2][0], laneStartPos[2][1], 2, 5));
+enemy.addUnit(2, new Cavalry(laneStartPos[0][0], laneStartPos[2][1], 2, 5));
+enemy.addUnit(0, new Soldier(laneStartPos[2][0], laneStartPos[0][1], 2, 3));
+enemy.addUnit(1, new Lancer(laneStartPos[1][0], laneStartPos[1][1], 2, 4));
+enemy.addUnit(2, new Cavalry(laneStartPos[0][0], laneStartPos[2][1], 2, 5));
 
 
 Promise.all(imgPaths.map(path => {
@@ -80,21 +86,29 @@ Promise.all(imgPaths.map(path => {
       for (let j = 0; j < playerObj1.lanes[i].length; j++) {
         if (j == 0) {
           if (playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0 ||
-            Math.abs(playerObj1.lanes[i][j].pos[1] - (canvas.height - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos[1])) > images[0].height) {
+            Math.abs(playerObj1.lanes[i][j].pos[1] - (canvas.height - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos[1])) > unitSize[1]) {
             playerObj1.lanes[i][j].isMove = true;
           }
         } else {
-          if (Math.abs(playerObj1.lanes[i][j - 1].pos[1] - playerObj1.lanes[i][j].pos[1]) > images[0].height) {
+          if (Math.abs(playerObj1.lanes[i][j - 1].pos[1] - playerObj1.lanes[i][j].pos[1]) > unitSize[1]) {
             playerObj1.lanes[i][j].isMove = true;
           } else {
-            if (playerObj1.lanes[i][j - 1].constructor == playerObj1.lanes[i][j].constructor) {
+            if (playerObj1.lanes[i][j - 1].constructor === playerObj1.lanes[i][j].constructor) {
               playerObj1.lanes[i][j - 1].isCooperate = true;
             }
             playerObj1.lanes[i][j].isMove = false;
           }
         }
         playerObj1.lanes[i][j].update();
-        if (playerObj1.lanes[i][j].hp <= 0) playerObj1.eraseUnit(i);
+      }
+    }
+  }
+
+  function eraseUnit(playerObj) {
+    for (let i = 0; i < playerObj.lanes.length; i++) {
+      if (playerObj.lanes[i].length == 0) continue;
+      if (playerObj.lanes[i][0].hp <= 0) {
+        playerObj.eraseUnit(i);
       }
     }
   }
@@ -104,8 +118,8 @@ Promise.all(imgPaths.map(path => {
     // 最初に1回だけclearRectを呼ぶ
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     //x, yを更新することで画像の座標を変更できる
-    ctx.drawImage(images[3], canvas.width/2-images[3].width/2, 0);
-    ctx.drawImage(images[3], canvas.width/2-images[3].width/2, canvas.height-images[3].height);
+    ctx.drawImage(images[3], canvas.width / 2 - images[3].width / 2, 0);
+    ctx.drawImage(images[3], canvas.width / 2 - images[3].width / 2, canvas.height - images[3].height);
     drawUnit(player);
     drawUnit(enemy);
   }
@@ -118,6 +132,9 @@ Promise.all(imgPaths.map(path => {
     //move
     updateUnit(player, enemy);
     updateUnit(enemy, player);
+
+    eraseUnit(player);
+    eraseUnit(enemy);
 
     drawImage();
     requestAnimationFrame(mainLoop);
