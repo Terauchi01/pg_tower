@@ -17,6 +17,16 @@ class Unit {
         }
         this.pos[1] -= this.speed;
     }
+
+    /*
+    update(dx, dy) {
+        if (!this.isMove) {
+            return;
+        }
+        this.pos[0] += this.speed*dx;
+        this.pos[1] += this.speed*dy;
+    }
+    */
     //attack(obj) { }
 };
 

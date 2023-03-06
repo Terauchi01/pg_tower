@@ -8,22 +8,22 @@ const ctx = canvas.getContext("2d");
 const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/castle.png"];
 const images = [];
 
+const unitSize = [64, 64];
+const castleSize = [256, 256];
+const laneStartPos = [[canvas.width/2 - castleSize[0]/2 - unitSize[0], canvas.height - castleSize[1]/2 - unitSize[1]/2], 
+[canvas.width/2 - unitSize[0]/2, canvas.height - castleSize[1] - unitSize[1]], 
+[canvas.width/2 + castleSize[0]/2, canvas.height - castleSize[1]/2 - unitSize[1]/2]];
+
 const player = new Player(1);
-
-const lanePosx = [canvas.width / 4, canvas.width / 2, canvas.width / 4 * 3];
-
-player.addUnit(0, new Soldier(lanePosx[0], 400, 1, 4));
-player.addUnit(1, new Cavalry(lanePosx[1], 500, 1, 5));
-player.addUnit(2, new Cavalry(lanePosx[2], 400, 1, 6));
-
-player.addUnit(0, new Soldier(lanePosx[0], canvas.height, 1, 1));
-player.addUnit(1, new Lancer(lanePosx[1], canvas.height, 1, 2));
-player.addUnit(2, new Cavalry(lanePosx[2], canvas.height, 1, 3));
-player.addUnit(2, new Cavalry(lanePosx[2], canvas.height, 1, 3));
+player.addUnit(0, new Lancer(laneStartPos[0][0], laneStartPos[0][1], 1, 0));
+player.addUnit(1, new Cavalry(laneStartPos[1][0], laneStartPos[1][1], 1, 1));
+player.addUnit(2, new Soldier(laneStartPos[2][0], laneStartPos[2][1], 1, 2));
 
 const enemy = new Player(2);
-enemy.addUnit(0, new Soldier(lanePosx[2], canvas.height, 2, 7));
-enemy.addUnit(1, new Lancer(lanePosx[1], canvas.height, 2, 8));
+enemy.addUnit(0, new Soldier(laneStartPos[0][0], laneStartPos[0][1], 2, 3));
+enemy.addUnit(1, new Lancer(laneStartPos[1][0], laneStartPos[1][1], 2, 4));
+enemy.addUnit(2, new Cavalry(laneStartPos[2][0], laneStartPos[2][1], 2, 5));
+
 
 Promise.all(imgPaths.map(path => {
   return new Promise((resolve, reject) => {
@@ -43,7 +43,6 @@ Promise.all(imgPaths.map(path => {
     for (ary of playerObj.lanes) {
       for (obj of ary) {
         let px = obj.pos[0], py = obj.pos[1];
-        px = px - images[0].width/2
         if (playerObj.playerID != 1) {
           py = canvas.height - py;
         }
@@ -65,11 +64,13 @@ Promise.all(imgPaths.map(path => {
   function attackUnit(playerObj1, playerObj2) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
       if (playerObj1.lanes[i].length == 0 || playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0) continue;
-      if (Math.abs(playerObj1.lanes[i][0].pos[1] - (canvas.height - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos[1])) <= images[0].height) {
-        playerObj1.lanes[i][0].isMove = false;
-        playerObj2.lanes[playerObj2.lanes.length - i - 1][0].isMove = false;
-        playerObj1.lanes[i][0].attack(playerObj2.lanes[playerObj2.lanes.length - i - 1][0]);
-        playerObj2.lanes[playerObj2.lanes.length - i - 1][0].attack(playerObj1.lanes[i][0]);
+      let obj1 = playerObj1.lanes[i][0];
+      let obj2 = playerObj2.lanes[playerObj2.lanes.length - i - 1][0];
+      if (Math.abs(obj1.pos[1] - (canvas.height - obj2.pos[1])) <= unitSize[1]) {
+        obj1.isMove = false;
+        obj2.isMove = false;
+        obj1.attack(obj2);
+        obj2.attack(obj1);
       }
     }
   }
