@@ -158,27 +158,6 @@ Promise.all(imgPaths.map(path => {
     // 最初に1回だけclearRectを呼ぶ
     ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
-          // ボタンの外枠を描画
-      ctx.beginPath();
-      ctx.rect(50, 25, 100, 50);
-      ctx.stroke();
-
-      // ボタンに表示するテキストを設定
-      ctx.font = '20px Arial';
-      ctx.fillText('test1', 80, 55);
-
-      // ボタンをクリックしたときの処理
-      canvas.addEventListener('test', function(event) {
-        // クリックされた座標を取得
-        var x = event.pageX - canvas.offsetLeft;
-        var y = event.pageY - canvas.offsetTop;
-
-        // ボタン内をクリックした場合
-        if (x > 50 && x < 150 && y > 25 && y < 75) {
-          alert('Button clicked!');
-          //player.pauseCostIncrease()
-        }
-      });
     //x, yを更新することで画像の座標を変更できる
     ctx.drawImage(images[3], canvasSize.width / 2 - castleSize.width / 2, 0);
     ctx.drawImage(images[3], canvasSize.width / 2 - castleSize.width / 2, canvasSize.height - castleSize.height);
@@ -201,6 +180,28 @@ Promise.all(imgPaths.map(path => {
 
     //描画
     drawImage(ctx, canvasSizeData, castleSizeData, unitSizeData);
+          // ボタンの外枠を描画
+      ctx.beginPath();
+      ctx.rect(50, 25, 100, 50);
+      ctx.stroke();
+
+      // ボタンに表示するテキストを設定
+      ctx.font = '20px Arial';
+      ctx.fillText('test', 80, 55);
+
+      // ボタンをクリックしたときの処理
+      canvas.addEventListener('click', function(event) {
+        // クリックされた座標を取得
+        var x = event.pageX - canvas.offsetLeft;
+        var y = event.pageY - canvas.offsetTop;
+
+        // ボタン内をクリックした場合
+        if (x > 50 && x < 150 && y > 25 && y < 75) {
+          //alert('Button clicked!');
+          player.pauseCostIncrease();
+        }
+      });
+
     //mainloopを回すために必要
     requestAnimationFrame(mainLoop);
   }
