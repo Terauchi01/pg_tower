@@ -20,6 +20,7 @@ class Unit {
     }
     */
 
+    //unitの移動処理, dx, dyは単位ベクトルとなるような数値を渡す
     update(dx, dy) {
         if (!this.isMove) {
             return;
@@ -27,7 +28,8 @@ class Unit {
         this.pos.x += this.speed*dx;
         this.pos.y += this.speed*dy;
     }
-    //attack(obj) { }
+    //攻撃用の関数,攻撃対象のインスタンスを引数として渡す
+    attack(obj) { }
 };
 
 class Soldier extends Unit {

@@ -7,15 +7,19 @@ const ctx = canvas.getContext("2d");
 // 画像の読み込み
 const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/castle.png"];
 
+//画像のインスタンスを保管する配列
 const images = [];
 
+//画像チップのサイズを保管
 const unitSize = {width:64, height:64};
 const castleSize = {width:256, height:256};
 
+//ユニットの初期位置を設定
 const laneStartPos = {left:{x:canvas.width / 2 - castleSize.width / 2 - unitSize.width / 2, y:canvas.height - castleSize.height / 2},
                       middle:{x:canvas.width / 2, y:canvas.height - castleSize.height - unitSize.height / 2}, 
                       right:{x:canvas.width / 2 + castleSize.width / 2 + unitSize.width / 2, y:canvas.height - castleSize.height / 2}}
 
+//各プレイヤーの初期化、現状ユニット追加が未実装の為初期でユニットを配置してテストを行う
 const player = new Player(1);
 player.addUnit(0, new Lancer(laneStartPos.left.x, laneStartPos.left.y, 1, 0));
 player.addUnit(1, new Cavalry(laneStartPos.middle.x, laneStartPos.middle.y, 1, 1));
@@ -32,7 +36,7 @@ enemy.addUnit(0, new Soldier(laneStartPos.left.x, laneStartPos.left.y, 2, 3));
 enemy.addUnit(1, new Lancer(laneStartPos.middle.x, laneStartPos.middle.y, 2, 4));
 enemy.addUnit(2, new Cavalry(laneStartPos.right.x, laneStartPos.right.y, 2, 5));
 
-
+//画像読み込み
 Promise.all(imgPaths.map(path => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -47,6 +51,7 @@ Promise.all(imgPaths.map(path => {
   });
 })).then(() => {
 
+  //ユニットの画像描画用の関数,playerのインスタンスを渡すとそのplayerの保持するユニットを描画
   function drawUnit(playerObj) {
     for (ary of playerObj.lanes) {
       for (obj of ary) {
@@ -70,8 +75,10 @@ Promise.all(imgPaths.map(path => {
     }
   }
 
+  //ユニットの攻撃、playerObj1,playerObj2には各プレイヤーのインスタンスを渡す(順不同)
   function attackUnit(playerObj1, playerObj2) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
+      //length==0を先に判定しないと配列外アクセス
       if (playerObj1.lanes[i].length == 0 || playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0) continue;
       let obj1 = playerObj1.lanes[i][0];
       let obj2 = playerObj2.lanes[playerObj2.lanes.length - i - 1][0];
@@ -84,6 +91,7 @@ Promise.all(imgPaths.map(path => {
     }
   }
 
+  //ユニットの移動関係,動かしたいplayerのインスタンスをplayerObj1,もう片方のインスタンスをplayerObj2
   function updateUnit(playerObj1, playerObj2) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
       for (let j = 0; j < playerObj1.lanes[i].length; j++) {
@@ -123,6 +131,7 @@ Promise.all(imgPaths.map(path => {
     }
   }
 
+  //指定したplayerのユニットのhpを確認しhpがゼロ以下のユニットを消去
   function eraseUnit(playerObj) {
     for (let i = 0; i < playerObj.lanes.length; i++) {
       if (playerObj.lanes[i].length == 0) continue;
@@ -152,13 +161,17 @@ Promise.all(imgPaths.map(path => {
     updateUnit(player, enemy);
     updateUnit(enemy, player);
 
+    //ユニット消去
     eraseUnit(player);
     eraseUnit(enemy);
 
+    //描画
     drawImage();
+    //mainloopを回すために必要
     requestAnimationFrame(mainLoop);
   }
-
+  
+  //mainloopを回すために必要
   requestAnimationFrame(mainLoop);
 }).catch((err) => {
   console.error("Error loading images:", err);
