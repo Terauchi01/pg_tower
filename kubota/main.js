@@ -11,13 +11,16 @@ const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", 
 const images = [];
 
 //画像チップのサイズを保管
-const unitSize = {width:64, height:64};
-const castleSize = {width:256, height:256};
+const unitSize = { width: 64, height: 64 };
+const castleSize = { width: 256, height: 256 };
+const canvasSize = { width: canvas.width, height: canvas.height};
 
 //ユニットの初期位置を設定
-const laneStartPos = {left:{x:canvas.width / 2 - castleSize.width / 2 - unitSize.width / 2, y:canvas.height - castleSize.height / 2},
-                      middle:{x:canvas.width / 2, y:canvas.height - castleSize.height - unitSize.height / 2}, 
-                      right:{x:canvas.width / 2 + castleSize.width / 2 + unitSize.width / 2, y:canvas.height - castleSize.height / 2}}
+const laneStartPos = {
+  left: { x: canvas.width / 2 - castleSize.width / 2 - unitSize.width / 2, y: canvas.height - castleSize.height / 2 },
+  middle: { x: canvas.width / 2, y: canvas.height - castleSize.height - unitSize.height / 2 },
+  right: { x: canvas.width / 2 + castleSize.width / 2 + unitSize.width / 2, y: canvas.height - castleSize.height / 2 }
+}
 
 //各プレイヤーの初期化、現状ユニット追加が未実装の為初期でユニットを配置してテストを行う
 const player = new Player(1);
@@ -52,23 +55,23 @@ Promise.all(imgPaths.map(path => {
 })).then(() => {
 
   //ユニットの画像描画用の関数,playerのインスタンスを渡すとそのplayerの保持するユニットを描画
-  function drawUnit(playerObj) {
+  function drawUnit(playerObj, canvasSize, unitSize) {
     for (ary of playerObj.lanes) {
       for (obj of ary) {
         let px = obj.pos.x, py = obj.pos.y;
         if (playerObj.playerID != 1) {
-          px = canvas.width - px;
-          py = canvas.height - py;
+          px = canvasSize.width - px;
+          py = canvasSize.height - py;
         }
         switch (obj.constructor) {
           case Soldier:
-            ctx.drawImage(images[0], px - unitSize.width/2, py - unitSize.height/2);
+            ctx.drawImage(images[0], px - unitSize.width / 2, py - unitSize.height / 2);
             break;
           case Lancer:
-            ctx.drawImage(images[1], px - unitSize.width/2, py - unitSize.height/2);
+            ctx.drawImage(images[1], px - unitSize.width / 2, py - unitSize.height / 2);
             break;
           case Cavalry:
-            ctx.drawImage(images[2], px - unitSize.width/2, py - unitSize.height/2);
+            ctx.drawImage(images[2], px - unitSize.width / 2, py - unitSize.height / 2);
             break;
         }
       }
@@ -76,13 +79,14 @@ Promise.all(imgPaths.map(path => {
   }
 
   //ユニットの攻撃、playerObj1,playerObj2には各プレイヤーのインスタンスを渡す(順不同)
-  function attackUnit(playerObj1, playerObj2) {
+  function attackUnit(playerObj1, playerObj2, canvasSize, unitSize) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
       //length==0を先に判定しないと配列外アクセス
       if (playerObj1.lanes[i].length == 0 || playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0) continue;
       let obj1 = playerObj1.lanes[i][0];
       let obj2 = playerObj2.lanes[playerObj2.lanes.length - i - 1][0];
-      if (Math.abs(obj1.pos.y - (canvas.height - obj2.pos.y)) <= unitSize.height) {
+      let dx = obj1.pos.x - (canvasSize.width - obj2.pos.x), dy = obj1.pos.y - (canvasSize.height - obj2.pos.y);
+      if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(unitSize.height, 2)) {
         obj1.isMove = false;
         obj2.isMove = false;
         obj1.attack(obj2);
@@ -92,31 +96,36 @@ Promise.all(imgPaths.map(path => {
   }
 
   //ユニットの移動関係,動かしたいplayerのインスタンスをplayerObj1,もう片方のインスタンスをplayerObj2
-  function updateUnit(playerObj1, playerObj2) {
+  function updateUnit(playerObj1, playerObj2, canvasSize, unitSize) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
       for (let j = 0; j < playerObj1.lanes[i].length; j++) {
         let dir = 270;
-        if (i == 0) { 
-          if (playerObj1.lanes[i][j].pos.y < canvas.height/3) {
+        if (i == 0) {
+          if (playerObj1.lanes[i][j].pos.y < canvasSize.height / 3) {
             dir = 315;
-          } else if (playerObj1.lanes[i][j].pos.y > canvas.height/3*2) {
+          } else if (playerObj1.lanes[i][j].pos.y > canvasSize.height / 3 * 2) {
             dir = 225;
           }
         } else if (i == 2) {
-          if (playerObj1.lanes[i][j].pos.y < canvas.height/3) {
+          if (playerObj1.lanes[i][j].pos.y < canvasSize.height / 3) {
             dir = 225;
-          } else if (playerObj1.lanes[i][j].pos.y > canvas.height/3*2) {
+          } else if (playerObj1.lanes[i][j].pos.y > canvasSize.height / 3 * 2) {
             dir = 315;
           }
         }
-        
+
         if (j == 0) {
-          if (playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0 ||
-            Math.abs(playerObj1.lanes[i][j].pos.y - (canvas.height - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y)) > unitSize.height) {
+          if (playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0) {
             playerObj1.lanes[i][j].isMove = true;
+          } else {
+            let dx = playerObj1.lanes[i][j].pos.x - (canvasSize.width - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.x), dy = playerObj1.lanes[i][j].pos.y - (canvasSize.height - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y);
+            if (Math.pow(dx, 2) + Math.pow(dy, 2) > Math.pow(unitSize.height, 2)) {
+              playerObj1.lanes[i][j].isMove = true;
+            }
           }
         } else {
-          if (Math.abs(playerObj1.lanes[i][j - 1].pos.y - playerObj1.lanes[i][j].pos.y) > unitSize.height) {
+          let dx = playerObj1.lanes[i][j].pos.x - playerObj1.lanes[i][j - 1].pos.x, dy = playerObj1.lanes[i][j].pos.y - playerObj1.lanes[i][j - 1].pos.y;
+          if (Math.pow(dx, 2) + Math.pow(dy, 2) > Math.pow(unitSize.height, 2)) {
             playerObj1.lanes[i][j].isMove = true;
           } else {
             if (playerObj1.lanes[i][j - 1].constructor === playerObj1.lanes[i][j].constructor) {
@@ -125,7 +134,7 @@ Promise.all(imgPaths.map(path => {
             playerObj1.lanes[i][j].isMove = false;
           }
         }
-        let rad = dir*(Math.PI/180);
+        let rad = dir * (Math.PI / 180);
         playerObj1.lanes[i][j].update(Math.cos(rad), Math.sin(rad));
       }
     }
@@ -142,35 +151,35 @@ Promise.all(imgPaths.map(path => {
   }
 
   // 画像を描画する関数
-  function drawImage() {
+  function drawImage(ctx, canvasSize, castleSize) {
     // 最初に1回だけclearRectを呼ぶ
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
     //x, yを更新することで画像の座標を変更できる
-    ctx.drawImage(images[3], canvas.width / 2 - castleSize.width / 2, 0);
-    ctx.drawImage(images[3], canvas.width / 2 - castleSize.width / 2, canvas.height - castleSize.height);
-    drawUnit(player);
-    drawUnit(enemy);
+    ctx.drawImage(images[3], canvasSize.width / 2 - castleSize.width / 2, 0);
+    ctx.drawImage(images[3], canvasSize.width / 2 - castleSize.width / 2, canvasSize.height - castleSize.height);
+    drawUnit(player, canvasSize, unitSize);
+    drawUnit(enemy, canvasSize, unitSize);
   }
 
   function mainLoop() {
     //ここに繰り返したいものを書く
     //attack
-    attackUnit(player, enemy);
+    attackUnit(player, enemy, canvasSize, unitSize);
 
     //move
-    updateUnit(player, enemy);
-    updateUnit(enemy, player);
+    updateUnit(player, enemy, canvasSize, unitSize);
+    updateUnit(enemy, player, canvasSize, unitSize);
 
     //ユニット消去
     eraseUnit(player);
     eraseUnit(enemy);
 
     //描画
-    drawImage();
+    drawImage(ctx, canvasSize, castleSize);
     //mainloopを回すために必要
     requestAnimationFrame(mainLoop);
   }
-  
+
   //mainloopを回すために必要
   requestAnimationFrame(mainLoop);
 }).catch((err) => {
