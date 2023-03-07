@@ -1,6 +1,6 @@
 class Unit {
     constructor(x, y, hp, atk, speed, playerId, unitTypeId, unitId) {
-        this.pos = [x, y];
+        this.pos = {x:x, y:y};
         this.hp = hp;
         this.atk = atk;
         this.speed = speed;
@@ -11,18 +11,28 @@ class Unit {
         this.isMove = true;
     }
 
+    /*
     update() {
         if (!this.isMove) {
             return;
         }
         this.pos[1] -= this.speed;
     }
+    */
+
+    update(dx, dy) {
+        if (!this.isMove) {
+            return;
+        }
+        this.pos.x += this.speed*dx;
+        this.pos.y += this.speed*dy;
+    }
     //attack(obj) { }
 };
 
 class Soldier extends Unit {
-    constructor(x, y, hp, playerId, unitId) {
-        super(x, y, hp, 2, 1, playerId, 1, unitId);
+    constructor(x, y, playerId, unitId) {
+        super(x, y, 2000, 2, 1, playerId, 1, unitId);
     }
 
     attack(obj) {
@@ -35,8 +45,8 @@ class Soldier extends Unit {
 };
 
 class Lancer extends Unit {
-    constructor(x, y, hp, playerId, unitId) {
-        super(x, y, hp, 2, 1, playerId, 2, unitId);
+    constructor(x, y, playerId, unitId) {
+        super(x, y, 2000, 2, 1, playerId, 2, unitId);
     }
 
     attack(obj) {
@@ -49,8 +59,8 @@ class Lancer extends Unit {
 };
 
 class Cavalry extends Unit {
-    constructor(x, y, hp, playerId, unitId) {
-        super(x, y, hp, 2, 1, playerId, 3, unitId);
+    constructor(x, y, playerId, unitId) {
+        super(x, y, 2000, 2, 1, playerId, 3, unitId);
     }
 
     attack(obj) {
