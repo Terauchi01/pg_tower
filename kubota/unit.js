@@ -1,6 +1,6 @@
 class Unit {
     constructor(x, y, hp, atk, speed, playerId, unitTypeId, unitId) {
-        this.pos = [x, y];
+        this.pos = {x:x, y:y};
         this.hp = hp;
         this.atk = atk;
         this.speed = speed;
@@ -11,22 +11,22 @@ class Unit {
         this.isMove = true;
     }
 
+    /*
     update() {
         if (!this.isMove) {
             return;
         }
         this.pos[1] -= this.speed;
     }
+    */
 
-    /*
     update(dx, dy) {
         if (!this.isMove) {
             return;
         }
-        this.pos[0] += this.speed*dx;
-        this.pos[1] += this.speed*dy;
+        this.pos.x += this.speed*dx;
+        this.pos.y += this.speed*dy;
     }
-    */
     //attack(obj) { }
 };
 
