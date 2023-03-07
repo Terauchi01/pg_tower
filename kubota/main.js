@@ -54,7 +54,7 @@ Promise.all(imgPaths.map(path => {
   });
 })).then(() => {
 
-  //ユニットの画像描画用の関数,playerのインスタンスを渡すとそのplayerの保持するユニットを描画
+  //ユニットの画像描画用の関数,playerのインスタンスを渡すとそのplayerの保持するユニットを描画, canvasSize, unitSizeにはサイズを渡す
   function drawUnit(playerObj, canvasSize, unitSize) {
     for (ary of playerObj.lanes) {
       for (obj of ary) {
@@ -78,7 +78,7 @@ Promise.all(imgPaths.map(path => {
     }
   }
 
-  //ユニットの攻撃、playerObj1,playerObj2には各プレイヤーのインスタンスを渡す(順不同)
+  //ユニットの攻撃、playerObj1,playerObj2には各プレイヤーのインスタンスを渡す(順不同), canvasSize, unitSizeにはサイズを渡す
   function attackUnit(playerObj1, playerObj2, canvasSize, unitSize) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
       //length==0を先に判定しないと配列外アクセス
@@ -96,6 +96,7 @@ Promise.all(imgPaths.map(path => {
   }
 
   //ユニットの移動関係,動かしたいplayerのインスタンスをplayerObj1,もう片方のインスタンスをplayerObj2
+  //canvasSize, unitSizeにはサイズを渡す
   function updateUnit(playerObj1, playerObj2, canvasSize, unitSize) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
       for (let j = 0; j < playerObj1.lanes[i].length; j++) {
@@ -150,8 +151,8 @@ Promise.all(imgPaths.map(path => {
     }
   }
 
-  // 画像を描画する関数
-  function drawImage(ctx, canvasSize, castleSize) {
+  // 画像を描画する関数, ctxにキャンバスのコンテキスト,canvasSize, unitSize, castleSizeにはサイズを渡す
+  function drawImage(ctx, canvasSize, castleSize, unitSize) {
     // 最初に1回だけclearRectを呼ぶ
     ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
     //x, yを更新することで画像の座標を変更できる
