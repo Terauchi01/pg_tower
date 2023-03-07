@@ -12,9 +12,9 @@ const images = [];
 const unitSize = {width:64, height:64};
 const castleSize = {width:256, height:256};
 
-const laneStartPos = {left:{x:canvas.width / 2 - castleSize.width / 2 - unitSize.width, y:canvas.height - castleSize.height / 2 - unitSize.height / 2},
- middle:{x:canvas.width / 2 - unitSize.width / 2, y:canvas.height - castleSize.height - unitSize.height}, 
- right:{x:canvas.width / 2 + castleSize.width / 2, y:canvas.height - castleSize.height / 2 - unitSize.width / 2}}
+const laneStartPos = {left:{x:canvas.width / 2 - castleSize.width / 2 - unitSize.width / 2, y:canvas.height - castleSize.height / 2},
+                      middle:{x:canvas.width / 2, y:canvas.height - castleSize.height - unitSize.height / 2}, 
+                      right:{x:canvas.width / 2 + castleSize.width / 2 + unitSize.width / 2, y:canvas.height - castleSize.height / 2}}
 
 const player = new Player(1);
 player.addUnit(0, new Lancer(laneStartPos.left.x, laneStartPos.left.y, 1, 0));
@@ -25,12 +25,12 @@ player.addUnit(1, new Cavalry(laneStartPos.middle.x, laneStartPos.middle.y, 1, 1
 player.addUnit(2, new Soldier(laneStartPos.right.x, laneStartPos.right.y, 1, 2));
 
 const enemy = new Player(2);
-enemy.addUnit(0, new Soldier(laneStartPos.right.x, laneStartPos.left.y, 2, 3));
+enemy.addUnit(0, new Soldier(laneStartPos.left.x, laneStartPos.left.y, 2, 3));
 enemy.addUnit(1, new Lancer(laneStartPos.middle.x, laneStartPos.middle.y, 2, 4));
-enemy.addUnit(2, new Cavalry(laneStartPos.left.x, laneStartPos.right.y, 2, 5));
-enemy.addUnit(0, new Soldier(laneStartPos.right.x, laneStartPos.left.y, 2, 3));
+enemy.addUnit(2, new Cavalry(laneStartPos.right.x, laneStartPos.right.y, 2, 5));
+enemy.addUnit(0, new Soldier(laneStartPos.left.x, laneStartPos.left.y, 2, 3));
 enemy.addUnit(1, new Lancer(laneStartPos.middle.x, laneStartPos.middle.y, 2, 4));
-enemy.addUnit(2, new Cavalry(laneStartPos.left.x, laneStartPos.right.y, 2, 5));
+enemy.addUnit(2, new Cavalry(laneStartPos.right.x, laneStartPos.right.y, 2, 5));
 
 
 Promise.all(imgPaths.map(path => {
@@ -52,17 +52,18 @@ Promise.all(imgPaths.map(path => {
       for (obj of ary) {
         let px = obj.pos.x, py = obj.pos.y;
         if (playerObj.playerID != 1) {
+          px = canvas.width - px;
           py = canvas.height - py;
         }
         switch (obj.constructor) {
           case Soldier:
-            ctx.drawImage(images[0], px, py);
+            ctx.drawImage(images[0], px - unitSize.width/2, py - unitSize.height/2);
             break;
           case Lancer:
-            ctx.drawImage(images[1], px, py);
+            ctx.drawImage(images[1], px - unitSize.width/2, py - unitSize.height/2);
             break;
           case Cavalry:
-            ctx.drawImage(images[2], px, py);
+            ctx.drawImage(images[2], px - unitSize.width/2, py - unitSize.height/2);
             break;
         }
       }
@@ -86,6 +87,21 @@ Promise.all(imgPaths.map(path => {
   function updateUnit(playerObj1, playerObj2) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
       for (let j = 0; j < playerObj1.lanes[i].length; j++) {
+        let dir = 270;
+        if (i == 0) { 
+          if (playerObj1.lanes[i][j].pos.y < canvas.height/3) {
+            dir = 315;
+          } else if (playerObj1.lanes[i][j].pos.y > canvas.height/3*2) {
+            dir = 225;
+          }
+        } else if (i == 2) {
+          if (playerObj1.lanes[i][j].pos.y < canvas.height/3) {
+            dir = 225;
+          } else if (playerObj1.lanes[i][j].pos.y > canvas.height/3*2) {
+            dir = 315;
+          }
+        }
+        
         if (j == 0) {
           if (playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0 ||
             Math.abs(playerObj1.lanes[i][j].pos.y - (canvas.height - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y)) > unitSize.height) {
@@ -101,7 +117,8 @@ Promise.all(imgPaths.map(path => {
             playerObj1.lanes[i][j].isMove = false;
           }
         }
-        playerObj1.lanes[i][j].update(0, -1);
+        let rad = dir*(Math.PI/180);
+        playerObj1.lanes[i][j].update(Math.cos(rad), Math.sin(rad));
       }
     }
   }
