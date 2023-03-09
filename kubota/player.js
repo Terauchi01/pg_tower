@@ -8,7 +8,7 @@ class Player {
         this.pauseFlag = false;
         this.TIME_COST_UP = 1000;
         this.remainTime = 1;
-        this.pos = {x:castlePos.x, y:castlePos.y}
+        this.pos = { x: castlePos.x, y: castlePos.y }
     }
     addUnit(index, element) {
         this.lanes[index].push(element); //末尾にelementを追加
@@ -18,7 +18,7 @@ class Player {
     }
     startCostIncrease() {
         let isFirstInterval = true;
-        if(!this.pauseFlag){
+        if (!this.pauseFlag) {
             /* setTimeout(()=> {
                 isFirstInterval = false;
             }, this.remainTime); */
@@ -27,12 +27,12 @@ class Player {
                 console.log(performance.now());
             }, 1000);
         }
-        }
+    }
 
 
-        pauseCostIncrease() {
-            this.pauseFlag = !this.pauseFlag;
-            console.log(this.pauseFlag);
-            this.remainTime = 1000 - performance.now();
-}
+    pauseCostIncrease() {
+        this.pauseFlag = !this.pauseFlag;
+        console.log(this.pauseFlag);
+        this.remainTime = 1000 - performance.now();
+    }
 };

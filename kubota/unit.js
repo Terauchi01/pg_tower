@@ -1,7 +1,7 @@
 class Unit {
     constructor(x, y, hp, atk, speed, playerId, unitTypeId, unitId) {
         // ユニットの座標
-        this.pos = {x:x, y:y};
+        this.pos = { x: x, y: y };
         // ユニットの体力、0以下で死亡
         this.hp = hp;
         // ユニットの攻撃力
@@ -34,8 +34,8 @@ class Unit {
         if (!this.isMove) {
             return;
         }
-        this.pos.x += this.speed*dx;
-        this.pos.y += this.speed*dy;
+        this.pos.x += this.speed * dx;
+        this.pos.y += this.speed * dy;
     }
     //攻撃用の関数,攻撃対象のインスタンスを引数として渡す
     attack(obj) { }

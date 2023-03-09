@@ -14,6 +14,7 @@ const images = [];
 //画像チップのサイズを保管
 const unitSizeData = { width: 64, height: 64 };
 const castleSizeData = { width: 256, height: 256 };
+const dragSize = { width: 128, height: 128 };
 const canvasSizeData = { width: canvas.width, height: canvas.height };
 
 //ユニットの初期位置を設定
@@ -21,6 +22,11 @@ const laneStartPos = {
   left: { x: canvas.width / 2 - castleSizeData.width / 2 - unitSizeData.width / 2, y: canvas.height - castleSizeData.height / 2 },
   middle: { x: canvas.width / 2, y: canvas.height - castleSizeData.height - unitSizeData.height / 2 },
   right: { x: canvas.width / 2 + castleSizeData.width / 2 + unitSizeData.width / 2, y: canvas.height - castleSizeData.height / 2 }
+}
+const dragPos = {
+  soldier: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 3 },
+  lancer: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 2 },
+  cavalry: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height }
 }
 
 //各プレイヤーの初期化、現状ユニット追加が未実装の為初期でユニットを配置してテストを行う
@@ -173,6 +179,11 @@ Promise.all(imgPaths.map(path => {
     //x, yを更新することで画像の座標を変更できる
     if (player.castleHP > 0) ctx.drawImage(images[3], player.pos.x - castleSize.width / 2, player.pos.y - castleSizeData.height / 2);
     if (enemy.castleHP > 0) ctx.drawImage(images[3], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSizeData.height / 2);
+
+    ctx.drawImage(images[0], dragPos.soldier.x - dragSize.width / 2, dragPos.soldier.y - dragSize.height / 2, dragSize.width, dragSize.height);
+    ctx.drawImage(images[1], dragPos.lancer.x - dragSize.width / 2, dragPos.lancer.y - dragSize.height / 2, dragSize.width, dragSize.height);
+    ctx.drawImage(images[2], dragPos.cavalry.x - dragSize.width / 2, dragPos.cavalry.y - dragSize.height / 2, dragSize.width, dragSize.height);
+
     drawUnit(player, canvasSize, unitSize);
     drawUnit(enemy, canvasSize, unitSize);
   }
