@@ -2,8 +2,11 @@
 const canvas = document.getElementById("myCanvas");
 canvas.width = document.documentElement.scrollWidth;
 canvas.height = document.documentElement.scrollHeight;
-const ctx = canvas.getContext("2d");
 
+var isDrag = false;
+var mousePos = {x:0, y:0}
+
+const ctx = canvas.getContext("2d");
 
 // 画像の読み込み
 const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/castle.png"];
