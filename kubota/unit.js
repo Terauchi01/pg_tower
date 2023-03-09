@@ -1,13 +1,22 @@
 class Unit {
     constructor(x, y, hp, atk, speed, playerId, unitTypeId, unitId) {
+        // ユニットの座標
         this.pos = {x:x, y:y};
+        // ユニットの体力、0以下で死亡
         this.hp = hp;
+        // ユニットの攻撃力
         this.atk = atk;
+        // ユニットの移動速度 基本1
         this.speed = speed;
+        // ユニットがどちらのプレイヤーに所属しているかを識別する番号
         this.playerId = playerId;
+        // ユニットの種類を識別する番号
         this.unitTypeId = unitTypeId;
+        // ユニットの個体識別番号
         this.unitId = unitId;
+        // 接触バフが生じたかどうか
         this.isCooperate = false;
+        // 移動フラグ
         this.isMove = true;
     }
 
@@ -42,7 +51,11 @@ class Soldier extends Unit {
         let damage = this.atk;
         if (obj.constructor === Lancer) damage *= 2;
         if (this.isCooperate) damage *= 2;
-        obj.hp -= damage;
+        if (obj.constructor === Player) {
+            obj.castleHP -= damage;
+        } else {
+            obj.hp -= damage;
+        }
     }
 };
 
@@ -56,7 +69,11 @@ class Lancer extends Unit {
         let damage = this.atk;
         if (obj.constructor === Cavalry) damage *= 2;
         if (this.isCooperate) damage *= 2;
-        obj.hp -= damage;
+        if (obj.constructor === Player) {
+            obj.castleHP -= damage;
+        } else {
+            obj.hp -= damage;
+        }
     }
 };
 
@@ -70,6 +87,10 @@ class Cavalry extends Unit {
         let damage = this.atk;
         if (obj.constructor === Soldier) damage *= 2;
         if (this.isCooperate) damage *= 2;
-        obj.hp -= damage;
+        if (obj.constructor === Player) {
+            obj.castleHP -= damage;
+        } else {
+            obj.hp -= damage;
+        }
     }
 };

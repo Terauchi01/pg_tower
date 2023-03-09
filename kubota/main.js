@@ -14,7 +14,7 @@ const images = [];
 //画像チップのサイズを保管
 const unitSizeData = { width: 64, height: 64 };
 const castleSizeData = { width: 256, height: 256 };
-const canvasSizeData = { width: canvas.width, height: canvas.height};
+const canvasSizeData = { width: canvas.width, height: canvas.height };
 
 //ユニットの初期位置を設定
 const laneStartPos = {
@@ -24,7 +24,7 @@ const laneStartPos = {
 }
 
 //各プレイヤーの初期化、現状ユニット追加が未実装の為初期でユニットを配置してテストを行う
-const player = new Player(1);
+const player = new Player(1, { x: canvas.width / 2, y: canvas.height - castleSizeData.height / 2 });
 player.addUnit(0, new Lancer(laneStartPos.left.x, laneStartPos.left.y, 1, 0));
 player.addUnit(1, new Cavalry(laneStartPos.middle.x, laneStartPos.middle.y, 1, 1));
 player.addUnit(2, new Soldier(laneStartPos.right.x, laneStartPos.right.y, 1, 2));
@@ -33,7 +33,7 @@ player.addUnit(1, new Cavalry(laneStartPos.middle.x, laneStartPos.middle.y, 1, 1
 player.addUnit(2, new Soldier(laneStartPos.right.x, laneStartPos.right.y, 1, 2));
 player.startCostIncrease()
 
-const enemy = new Player(2);
+const enemy = new Player(2, { x: canvas.width / 2, y: canvas.height - castleSizeData.height / 2 });
 enemy.addUnit(0, new Soldier(laneStartPos.left.x, laneStartPos.left.y, 2, 3));
 enemy.addUnit(1, new Lancer(laneStartPos.middle.x, laneStartPos.middle.y, 2, 4));
 enemy.addUnit(2, new Cavalry(laneStartPos.right.x, laneStartPos.right.y, 2, 5));
@@ -81,25 +81,34 @@ Promise.all(imgPaths.map(path => {
   }
 
   //ユニットの攻撃、playerObj1,playerObj2には各プレイヤーのインスタンスを渡す(順不同), canvasSize, unitSizeにはサイズを渡す
-  function attackUnit(playerObj1, playerObj2, canvasSize, unitSize) {
+  function attackUnit(playerObj1, playerObj2, canvasSize, castleSize, unitSize) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
-      //length==0を先に判定しないと配列外アクセス
-      if (playerObj1.lanes[i].length == 0 || playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0) continue;
-      let obj1 = playerObj1.lanes[i][0];
-      let obj2 = playerObj2.lanes[playerObj2.lanes.length - i - 1][0];
-      let dx = obj1.pos.x - (canvasSize.width - obj2.pos.x), dy = obj1.pos.y - (canvasSize.height - obj2.pos.y);
-      if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(unitSize.height, 2)) {
-        obj1.isMove = false;
-        obj2.isMove = false;
-        obj1.attack(obj2);
-        obj2.attack(obj1);
+      //length!=0を先に判定しないと配列外アクセス
+      if (playerObj1.lanes[i].length != 0 && playerObj2.lanes[playerObj2.lanes.length - i - 1].length != 0) {
+        let obj1 = playerObj1.lanes[i][0];
+        let obj2 = playerObj2.lanes[playerObj2.lanes.length - i - 1][0];
+        let dx = obj1.pos.x - (canvasSize.width - obj2.pos.x), dy = obj1.pos.y - (canvasSize.height - obj2.pos.y);
+        if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(unitSize.height, 2)) {
+          obj1.attack(obj2);
+          obj2.attack(obj1);
+        }
+      } else if (playerObj1.lanes[i].length != 0 && playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0) {
+        if (Math.abs(playerObj1.lanes[i][0].pos.x - (canvasSize.width - playerObj2.pos.x)) < castleSize.width / 2 + unitSize.width / 2 &&
+          Math.abs(playerObj1.lanes[i][0].pos.y - (canvasSize.height - playerObj2.pos.y)) < castleSize.height / 2 + unitSize.height / 2) {
+          playerObj1.lanes[i][0].attack(playerObj2);
+        }
+      } else if (playerObj1.lanes[i].length == 0 && playerObj2.lanes[playerObj2.lanes.length - i - 1].length != 0) {
+        if (Math.abs(playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.x - (canvasSize.width - playerObj1.pos.x)) < castleSize.width / 2 + unitSize.width / 2 &&
+          Math.abs(playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y - (canvasSize.height - playerObj1.pos.y)) < castleSize.height / 2 + unitSize.height / 2) {
+          playerObj2.lanes[playerObj2.lanes.length - i - 1][0].attack(playerObj1);
+        }
       }
     }
   }
 
   //ユニットの移動関係,動かしたいplayerのインスタンスをplayerObj1,もう片方のインスタンスをplayerObj2
   //canvasSize, unitSizeにはサイズを渡す
-  function updateUnit(playerObj1, playerObj2, canvasSize, unitSize) {
+  function updateUnit(playerObj1, playerObj2, canvasSize, castleSize, unitSize) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
       for (let j = 0; j < playerObj1.lanes[i].length; j++) {
         let dir = 270;
@@ -119,7 +128,10 @@ Promise.all(imgPaths.map(path => {
 
         if (j == 0) {
           if (playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0) {
-            playerObj1.lanes[i][j].isMove = true;
+            if (Math.abs(playerObj1.lanes[i][j].pos.x - (canvasSize.width - playerObj2.pos.x)) >= castleSize.width / 2 + unitSize.width / 2 ||
+              Math.abs(playerObj1.lanes[i][j].pos.y - (canvasSize.height - playerObj2.pos.y)) >= castleSize.height / 2 + unitSize.height / 2) {
+              playerObj1.lanes[i][j].isMove = true;
+            }
           } else {
             let dx = playerObj1.lanes[i][j].pos.x - (canvasSize.width - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.x), dy = playerObj1.lanes[i][j].pos.y - (canvasSize.height - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y);
             if (Math.pow(dx, 2) + Math.pow(dy, 2) > Math.pow(unitSize.height, 2)) {
@@ -159,8 +171,8 @@ Promise.all(imgPaths.map(path => {
     ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
     //x, yを更新することで画像の座標を変更できる
-    ctx.drawImage(images[3], canvasSize.width / 2 - castleSize.width / 2, 0);
-    ctx.drawImage(images[3], canvasSize.width / 2 - castleSize.width / 2, canvasSize.height - castleSize.height);
+    if (player.castleHP > 0) ctx.drawImage(images[3], player.pos.x - castleSize.width / 2, player.pos.y - castleSizeData.height / 2);
+    if (enemy.castleHP > 0) ctx.drawImage(images[3], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSizeData.height / 2);
     drawUnit(player, canvasSize, unitSize);
     drawUnit(enemy, canvasSize, unitSize);
   }
@@ -168,11 +180,11 @@ Promise.all(imgPaths.map(path => {
   function mainLoop() {
     //ここに繰り返したいものを書く
     //attack
-    attackUnit(player, enemy, canvasSizeData, unitSizeData);
+    attackUnit(player, enemy, canvasSizeData, castleSizeData, unitSizeData);
 
     //move
-    updateUnit(player, enemy, canvasSizeData, unitSizeData);
-    updateUnit(enemy, player, canvasSizeData, unitSizeData);
+    updateUnit(player, enemy, canvasSizeData, castleSizeData, unitSizeData);
+    updateUnit(enemy, player, canvasSizeData, castleSizeData, unitSizeData);
 
     //ユニット消去
     eraseUnit(player);
@@ -180,27 +192,27 @@ Promise.all(imgPaths.map(path => {
 
     //描画
     drawImage(ctx, canvasSizeData, castleSizeData, unitSizeData);
-          // ボタンの外枠を描画
-      ctx.beginPath();
-      ctx.rect(50, 25, 100, 50);
-      ctx.stroke();
+    // ボタンの外枠を描画
+    ctx.beginPath();
+    ctx.rect(50, 25, 100, 50);
+    ctx.stroke();
 
-      // ボタンに表示するテキストを設定
-      ctx.font = '20px Arial';
-      ctx.fillText('test', 80, 55);
+    // ボタンに表示するテキストを設定
+    ctx.font = '20px Arial';
+    ctx.fillText('test', 80, 55);
 
-      // ボタンをクリックしたときの処理
-      canvas.addEventListener('click', function(event) {
-        // クリックされた座標を取得
-        var x = event.pageX - canvas.offsetLeft;
-        var y = event.pageY - canvas.offsetTop;
+    // ボタンをクリックしたときの処理
+    canvas.addEventListener('click', function (event) {
+      // クリックされた座標を取得
+      var x = event.pageX - canvas.offsetLeft;
+      var y = event.pageY - canvas.offsetTop;
 
-        // ボタン内をクリックした場合
-        if (x > 50 && x < 150 && y > 25 && y < 75) {
-          //alert('Button clicked!');
-          player.pauseCostIncrease();
-        }
-      });
+      // ボタン内をクリックした場合
+      if (x > 50 && x < 150 && y > 25 && y < 75) {
+        //alert('Button clicked!');
+        player.pauseCostIncrease();
+      }
+    });
 
     //mainloopを回すために必要
     requestAnimationFrame(mainLoop);

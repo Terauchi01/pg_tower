@@ -1,5 +1,5 @@
 class Player {
-    constructor(playerID) {
+    constructor(playerID, castlePos) {
         this.playerID = playerID;
         this.castleHP = 100;
         this.myCost = 100;
@@ -8,6 +8,7 @@ class Player {
         this.pauseFlag = false;
         this.TIME_COST_UP = 1000;
         this.remainTime = 1;
+        this.pos = {x:castlePos.x, y:castlePos.y}
     }
     addUnit(index, element) {
         this.lanes[index].push(element); //末尾にelementを追加
