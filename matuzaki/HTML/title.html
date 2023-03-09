@@ -2,20 +2,20 @@
 <html>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
-	<link rel="stylesheet" href="../CSS/base.css">
+	<link rel="stylesheet" href="./title.css">
+	<script src="SceneChange.js" defer></script>
 
     <head><h1 align = "center">PG_TOWER</h1></head>
 
 	<body>
-		<div class = "Style">
+		<div align = "center">
+			<button type="button" onclick=location.href="home.html">スタート</button>
+			<!--
 			<form action="home.html" name="Scene"></form>
-			<p><button class="titleButton" onclick="button_click()">スタート</button></p>
+			<span onclick="ButtonClicked()"><button>スタート</button></span>
+			<form action="#" name="Scene"></form>
+			<span onclick="ButtonClicked()"><button>エンド</button></span>
+			-->
 		</div>
 	</body>
-
-	<script>
-		function button_click() {
-			document.forms.Scene.submit();
-		}
-	</script>
 </html>

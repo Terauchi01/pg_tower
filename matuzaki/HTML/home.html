@@ -2,21 +2,21 @@
 <html>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
-	<link rel="stylesheet" href="../CSS/base.css">
+	<link rel="stylesheet" href="./title.css">
+	<script src="SceneChange.js" defer></script>
 
-    <head><h1 align = "center">PG_TOWER</h1></head>
+    <head><h1 align = "center">HOME</h1></head>
 
 	<body>
-		<form action="RoomMuch.html" name="Scene"></form>
-		<p><button class="titleButton" onclick="button_click()">ルームマッチ</button></p>
-
-		<form action="RoomMuch.html" name="Scene"></form>
-		<p><button class="titleButton" onclick="button_click()">CPU戦</button></p>
+		<div align = "center">
+			<button type="button" onclick=location.href="RoomMuch.html">スタート</button>
+			<button type="button" onclick=location.href="title.html">戻る</button>
+			<!--
+			<form action="RoomMuch.html" name="Scene"></form>
+			<span onclick="ButtonClicked()"><button>ルームマッチ</button></span>
+			<form action="title.html" name="Scene"></form>
+			<span onclick="ButtonClicked()"><button>CPU戦</button></span>
+			-->
+		</div>
 	</body>
-
-	<script>
-		function button_click() {
-			document.forms.Scene.submit();
-		}
-	</script>
 </html>
