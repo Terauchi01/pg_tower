@@ -1,0 +1,16 @@
+#button {
+  padding: 2rem 8em;/*ボタンの大きさ*/
+  text-decoration: none;
+  background: rgb(163, 154, 154);
+  color: rgb(5, 5, 5);
+  border-radius: 50px;/*丸み*/
+}
+
+#button:active{
+  box-shadow:inset -2px -2px 3px rgba(255, 255, 255, .6),
+  inset 2px 2px 3px rgba(0, 0, 0, .6);
+}
+    
+#button:hover{
+  background-color: #4d4949
+}    
