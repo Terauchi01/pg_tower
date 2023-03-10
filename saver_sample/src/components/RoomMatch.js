@@ -1,8 +1,17 @@
 import React from 'react';
 
-import { Link } from 'react-router-dom';
+//simport { Link } from 'react-router-dom';
 
-function Navigation() {
+
+function RoomMatch() {
+    return (
+      <div>
+        <h1>RoomMatch</h1>
+      </div>
+    );
+  }
+
+/* function Navigation() {
   return (
     <ul>
       <li>
@@ -13,6 +22,6 @@ function Navigation() {
       </li>
     </ul>
   );
-}
+} */
 
 export default RoomMatch;

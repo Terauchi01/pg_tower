@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 
-class CPUBattle extends React.Component {
+/* class CPUBattle extends React.Component {
     
 }
   
@@ -17,6 +17,15 @@ function Navigation() {
       </li>
     </ul>
   );
-}
+} */
+
+function CPUBattle() {
+    return (
+      <div>
+        <h1>CPUBattle</h1>
+      </div>
+    );
+  }
+
 
 export default CPUBattle;
