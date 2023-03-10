@@ -11,7 +11,7 @@ const circleSizeData = 64;
 const ctx = canvas.getContext("2d");
 
 // 画像の読み込み
-const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/castle.png"];
+const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/soldier2.png", "Image/lancer2.png", "Image/cavalry2.png", "Image/castle.png"];
 
 //画像のインスタンスを保管する配列
 const images = [];
@@ -21,6 +21,7 @@ const unitSizeData = { width: 64, height: 64 };
 const castleSizeData = { width: 256, height: 256 };
 const dragSize = { width: 128, height: 128 };
 const canvasSizeData = { width: canvas.width, height: canvas.height };
+const unitDir = {left:315, middle:270, right:225}
 
 //ユニットの初期位置を設定
 const laneStartPos = {
@@ -71,20 +72,21 @@ Promise.all(imgPaths.map(path => {
   function drawUnit(playerObj, canvasSize, unitSize) {
     for (ary of playerObj.lanes) {
       for (obj of ary) {
-        let px = obj.pos.x, py = obj.pos.y;
+        let px = obj.pos.x, py = obj.pos.y, index = 0;
         if (playerObj.playerID != 1) {
           px = canvasSize.width - px;
           py = canvasSize.height - py;
+          index = 3;
         }
         switch (obj.constructor) {
           case Soldier:
-            ctx.drawImage(images[0], px - unitSize.width / 2, py - unitSize.height / 2);
+            ctx.drawImage(images[0 + index], px - unitSize.width / 2, py - unitSize.height / 2);
             break;
           case Lancer:
-            ctx.drawImage(images[1], px - unitSize.width / 2, py - unitSize.height / 2);
+            ctx.drawImage(images[1 + index], px - unitSize.width / 2, py - unitSize.height / 2);
             break;
           case Cavalry:
-            ctx.drawImage(images[2], px - unitSize.width / 2, py - unitSize.height / 2);
+            ctx.drawImage(images[2 + index], px - unitSize.width / 2, py - unitSize.height / 2);
             break;
         }
       }
@@ -122,18 +124,18 @@ Promise.all(imgPaths.map(path => {
   function updateUnit(playerObj1, playerObj2, canvasSize, castleSize, unitSize) {
     for (let i = 0; i < playerObj1.lanes.length; i++) {
       for (let j = 0; j < playerObj1.lanes[i].length; j++) {
-        let dir = 270;
+        let dir = unitDir.middle;
         if (i == 0) {
           if (playerObj1.lanes[i][j].pos.y < canvasSize.height / 3) {
-            dir = 315;
+            dir = unitDir.left;
           } else if (playerObj1.lanes[i][j].pos.y > canvasSize.height / 3 * 2) {
-            dir = 225;
+            dir = unitDir.right;
           }
         } else if (i == 2) {
           if (playerObj1.lanes[i][j].pos.y < canvasSize.height / 3) {
-            dir = 225;
+            dir = unitDir.right;
           } else if (playerObj1.lanes[i][j].pos.y > canvasSize.height / 3 * 2) {
-            dir = 315;
+            dir = unitDir.left;
           }
         }
 
@@ -194,8 +196,8 @@ Promise.all(imgPaths.map(path => {
     ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
     //x, yを更新することで画像の座標を変更できる
-    if (player.castleHP > 0) ctx.drawImage(images[3], player.pos.x - castleSize.width / 2, player.pos.y - castleSizeData.height / 2);
-    if (enemy.castleHP > 0) ctx.drawImage(images[3], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSizeData.height / 2);
+    if (player.castleHP > 0) ctx.drawImage(images[6], player.pos.x - castleSize.width / 2, player.pos.y - castleSizeData.height / 2);
+    if (enemy.castleHP > 0) ctx.drawImage(images[6], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSizeData.height / 2);
 
     ctx.drawImage(images[0], dragPos.soldier.x - dragSize.width / 2, dragPos.soldier.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[1], dragPos.lancer.x - dragSize.width / 2, dragPos.lancer.y - dragSize.height / 2, dragSize.width, dragSize.height);
