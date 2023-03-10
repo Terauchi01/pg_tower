@@ -4,7 +4,9 @@ canvas.width = document.documentElement.scrollWidth;
 canvas.height = document.documentElement.scrollHeight;
 
 var isDrag = false;
-var mousePos = {x:0, y:0}
+var mousePos = { x: 0, y: 0 };
+var selectNum = -1;
+const circleSizeData = 64;
 
 const ctx = canvas.getContext("2d");
 
@@ -174,8 +176,20 @@ Promise.all(imgPaths.map(path => {
     }
   }
 
+  function drawCircle(pos, size) {
+    ctx.beginPath();
+    ctx.setLineDash([10, 10]);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'rgb(255, 0, 0)';
+    ctx.arc(pos.x, pos.y, size, (performance.now() / 100) * Math.PI / 180, ((performance.now() / 100) + 360) * Math.PI / 180, false);
+    ctx.stroke();
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgb(0, 0, 0)';
+  }
+
   // 画像を描画する関数, ctxにキャンバスのコンテキスト,canvasSize, unitSize, castleSizeにはサイズを渡す
-  function drawImage(ctx, canvasSize, castleSize, unitSize) {
+  function drawImage(ctx, canvasSize, castleSize, unitSize, circleSize) {
     // 最初に1回だけclearRectを呼ぶ
     ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
@@ -187,8 +201,14 @@ Promise.all(imgPaths.map(path => {
     ctx.drawImage(images[1], dragPos.lancer.x - dragSize.width / 2, dragPos.lancer.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[2], dragPos.cavalry.x - dragSize.width / 2, dragPos.cavalry.y - dragSize.height / 2, dragSize.width, dragSize.height);
 
+    drawCircle(laneStartPos.left, circleSize);
+    drawCircle(laneStartPos.middle, circleSize);
+    drawCircle(laneStartPos.right, circleSize);
+
     drawUnit(player, canvasSize, unitSize);
     drawUnit(enemy, canvasSize, unitSize);
+
+    if (isDrag) ctx.drawImage(images[selectNum], mousePos.x - unitSize.width / 2, mousePos.y - unitSize.height / 2);
   }
 
   function mainLoop() {
@@ -205,7 +225,7 @@ Promise.all(imgPaths.map(path => {
     eraseUnit(enemy);
 
     //描画
-    drawImage(ctx, canvasSizeData, castleSizeData, unitSizeData);
+    drawImage(ctx, canvasSizeData, castleSizeData, unitSizeData, circleSizeData);
     // ボタンの外枠を描画
     ctx.beginPath();
     ctx.rect(50, 25, 100, 50);
@@ -226,6 +246,54 @@ Promise.all(imgPaths.map(path => {
         //alert('Button clicked!');
         player.pauseCostIncrease();
       }
+
+    });
+
+    canvas.addEventListener('mousedown', function (event) {
+      //配置するユニットを選択
+
+      let checkDrag = (pos, index) => {
+        let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
+        if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(dragSize.height / 2, 2)) {
+          selectNum = index;
+          isDrag = true;
+        }
+      }
+
+      if (!isDrag) checkDrag(dragPos.soldier, 0);
+      if (!isDrag) checkDrag(dragPos.lancer, 1);
+      if (!isDrag) checkDrag(dragPos.cavalry, 2);
+    });
+
+    canvas.addEventListener('mouseup', function (event) {
+      //ユニット配置
+      let checkAdd = (pos, index) => {
+        let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
+        if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(circleSizeData, 2)) {
+          switch (selectNum) {
+            case 0:
+              player.addUnit(index, new Soldier(pos.x, pos.y, 1, 100));
+              break;
+            case 1:
+              player.addUnit(index, new Lancer(pos.x, pos.y, 1, 100));
+              break;
+            case 2:
+              player.addUnit(index, new Cavalry(pos.x, pos.y, 1, 100));
+              break;
+          }
+          isDrag = false;
+        }
+      }
+
+      if (isDrag) checkAdd(laneStartPos.left, 0);
+      if (isDrag) checkAdd(laneStartPos.middle, 1);
+      if (isDrag) checkAdd(laneStartPos.right, 2);
+      isDrag = false;
+    });
+
+    canvas.addEventListener('mousemove', function (event) {
+      mousePos.x = event.clientX;
+      mousePos.y = event.clientY;
     });
 
     //mainloopを回すために必要
