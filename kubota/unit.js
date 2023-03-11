@@ -4,6 +4,7 @@ class Unit {
         this.pos = { x: x, y: y };
         // ユニットの体力、0以下で死亡
         this.hp = hp;
+        this.HPMAX = hp;
         // ユニットの攻撃力
         this.atk = atk;
         // ユニットの移動速度 基本1

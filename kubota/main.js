@@ -21,7 +21,8 @@ const unitSize = { width: 64, height: 64 };
 const castleSize = { width: 256, height: 256 };
 const dragSize = { width: 128, height: 128 };
 const canvasSize = { width: canvas.width, height: canvas.height };
-const unitDir = {left:315, middle:270, right:225}
+const unitDir = { left: 315, middle: 270, right: 225 }
+const hpSize = { width: 20, height: 4 };
 
 //ユニットの初期位置を設定
 const laneStartPos = {
@@ -68,6 +69,35 @@ Promise.all(imgPaths.map(path => {
   });
 })).then(() => {
 
+  function drawHP(obj) {
+    let hpPar = (obj) => {
+      if (obj.hp <= 0) return 0;
+      return obj.hp / obj.HPMAX;
+    }
+    let hpPos = { x: obj.pos.x, y: obj.pos.y };
+    if (obj.playerId != 1) {
+      hpPos.x = canvas.width - hpPos.x;
+      hpPos.y = canvas.height - hpPos.y;
+    }
+    ctx.beginPath();
+    ctx.rect(hpPos.x - hpSize.width / 2, hpPos.y - unitSize.height / 2 - hpSize.height / 2, hpSize.width, hpSize.height);
+    ctx.fillStyle = 'rgb(255, 0, 0)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.rect(hpPos.x - hpSize.width / 2, hpPos.y - unitSize.height / 2 - hpSize.height / 2, hpPar(obj)*hpSize.width, hpSize.height);
+    ctx.fillStyle = 'rgb(50, 205, 50)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.rect(hpPos.x - hpSize.width / 2, hpPos.y - unitSize.height / 2 - hpSize.height / 2, hpSize.width, hpSize.height);
+    ctx.strokeStyle = 'rgb(0, 0, 0)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgb(0, 0, 0)';
+    ctx.strokeStyle = 'rgb(0, 0, 0)';
+  }
+
   //ユニットの画像描画用の関数,playerのインスタンスを渡すとそのplayerの保持するユニットを描画, canvasSize, unitSizeにはサイズを渡す
   function drawUnit(playerObj) {
     for (ary of playerObj.lanes) {
@@ -89,6 +119,7 @@ Promise.all(imgPaths.map(path => {
             ctx.drawImage(images[2 + index], px - unitSize.width / 2, py - unitSize.height / 2);
             break;
         }
+        drawHP(obj);
       }
     }
   }
@@ -270,7 +301,7 @@ Promise.all(imgPaths.map(path => {
       //ユニット配置
       let checkAdd = (pos, index) => {
         let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
-        if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(circleSizeData, 2)) {
+        if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(circleSize, 2)) {
           switch (selectNum) {
             case 0:
               player.addUnit(index, new Soldier(pos.x, pos.y, 1, 100));
