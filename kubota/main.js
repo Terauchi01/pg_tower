@@ -23,6 +23,7 @@ const dragSize = { width: 128, height: 128 };
 const canvasSize = { width: canvas.width, height: canvas.height };
 const unitDir = { left: 315, middle: 270, right: 225 }
 const hpSize = { width: 20, height: 4 };
+const castleHpSize = { width: 200, height: 10 };
 
 //ユニットの初期位置を設定
 const laneStartPos = {
@@ -69,7 +70,7 @@ Promise.all(imgPaths.map(path => {
   });
 })).then(() => {
 
-  function drawHP(obj) {
+  function drawHP(obj, objSize, barSize) {
     let hpPar = (obj) => {
       if (obj.hp <= 0) return 0;
       return obj.hp / obj.HPMAX;
@@ -80,15 +81,15 @@ Promise.all(imgPaths.map(path => {
       hpPos.y = canvas.height - hpPos.y;
     }
     ctx.beginPath();
-    ctx.rect(hpPos.x - hpSize.width / 2, hpPos.y - unitSize.height / 2 - hpSize.height / 2, hpSize.width, hpSize.height);
+    ctx.rect(hpPos.x - barSize.width / 2, hpPos.y - objSize.height / 2, barSize.width, barSize.height);
     ctx.fillStyle = 'rgb(255, 0, 0)';
     ctx.fill();
     ctx.beginPath();
-    ctx.rect(hpPos.x - hpSize.width / 2, hpPos.y - unitSize.height / 2 - hpSize.height / 2, hpPar(obj)*hpSize.width, hpSize.height);
+    ctx.rect(hpPos.x - barSize.width / 2, hpPos.y - objSize.height / 2, hpPar(obj) * barSize.width, barSize.height);
     ctx.fillStyle = 'rgb(50, 205, 50)';
     ctx.fill();
     ctx.beginPath();
-    ctx.rect(hpPos.x - hpSize.width / 2, hpPos.y - unitSize.height / 2 - hpSize.height / 2, hpSize.width, hpSize.height);
+    ctx.rect(hpPos.x - barSize.width / 2, hpPos.y - objSize.height / 2, barSize.width, barSize.height);
     ctx.strokeStyle = 'rgb(0, 0, 0)';
     ctx.lineWidth = 1;
     ctx.stroke();
@@ -103,7 +104,7 @@ Promise.all(imgPaths.map(path => {
     for (ary of playerObj.lanes) {
       for (obj of ary) {
         let px = obj.pos.x, py = obj.pos.y, index = 0;
-        if (playerObj.playerID != 1) {
+        if (playerObj.playerId != 1) {
           px = canvasSize.width - px;
           py = canvasSize.height - py;
           index = 3;
@@ -119,7 +120,7 @@ Promise.all(imgPaths.map(path => {
             ctx.drawImage(images[2 + index], px - unitSize.width / 2, py - unitSize.height / 2);
             break;
         }
-        drawHP(obj);
+        drawHP(obj, unitSize, hpSize);
       }
     }
   }
@@ -226,8 +227,14 @@ Promise.all(imgPaths.map(path => {
     ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
     //x, yを更新することで画像の座標を変更できる
-    if (player.castleHP > 0) ctx.drawImage(images[6], player.pos.x - castleSize.width / 2, player.pos.y - castleSize.height / 2);
-    if (enemy.castleHP > 0) ctx.drawImage(images[6], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSize.height / 2);
+    if (player.hp > 0) {
+      drawHP(player, castleSize, castleHpSize);
+      ctx.drawImage(images[6], player.pos.x - castleSize.width / 2, player.pos.y - castleSize.height / 2);
+    }
+    if (enemy.hp > 0) {
+      drawHP(enemy, castleSize, castleHpSize);
+      ctx.drawImage(images[6], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSize.height / 2);
+    }
 
     ctx.drawImage(images[0], dragPos.soldier.x - dragSize.width / 2, dragPos.soldier.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[1], dragPos.lancer.x - dragSize.width / 2, dragPos.lancer.y - dragSize.height / 2, dragSize.width, dragSize.height);

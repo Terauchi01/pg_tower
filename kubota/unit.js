@@ -52,11 +52,7 @@ class Soldier extends Unit {
         let damage = this.atk;
         if (obj.constructor === Lancer) damage *= 2;
         if (this.isCooperate) damage *= 2;
-        if (obj.constructor === Player) {
-            obj.castleHP -= damage;
-        } else {
-            obj.hp -= damage;
-        }
+        obj.hp -= damage;
     }
 };
 
@@ -70,11 +66,7 @@ class Lancer extends Unit {
         let damage = this.atk;
         if (obj.constructor === Cavalry) damage *= 2;
         if (this.isCooperate) damage *= 2;
-        if (obj.constructor === Player) {
-            obj.castleHP -= damage;
-        } else {
-            obj.hp -= damage;
-        }
+        obj.hp -= damage;
     }
 };
 
@@ -88,10 +80,6 @@ class Cavalry extends Unit {
         let damage = this.atk;
         if (obj.constructor === Soldier) damage *= 2;
         if (this.isCooperate) damage *= 2;
-        if (obj.constructor === Player) {
-            obj.castleHP -= damage;
-        } else {
-            obj.hp -= damage;
-        }
+        obj.hp -= damage;
     }
 };

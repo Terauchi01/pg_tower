@@ -1,7 +1,8 @@
 class Player {
     constructor(playerID, castlePos) {
-        this.playerID = playerID;
-        this.castleHP = 100;
+        this.playerId = playerID;
+        this.hp = 100;
+        this.HPMAX = 100;
         this.myCost = 100;
         this.costIncrease = 10;
         this.lanes = [[], [], []];
