@@ -24,6 +24,7 @@ const canvasSize = { width: canvas.width, height: canvas.height };
 const unitDir = { left: 315, middle: 270, right: 225 }
 const hpSize = { width: 20, height: 4 };
 const castleHpSize = { width: 200, height: 10 };
+const costPos = { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 4 };
 
 //ユニットの初期位置を設定
 const laneStartPos = {
@@ -221,6 +222,12 @@ Promise.all(imgPaths.map(path => {
     ctx.strokeStyle = 'rgb(0, 0, 0)';
   }
 
+  function drawCost(obj) {
+    let fontSize = 60;
+    ctx.font = fontSize+'px Arial';
+    ctx.fillText(Math.floor(obj.myCost), costPos.x - fontSize/2*Math.floor(Math.log10(Math.max(1,obj.myCost))), costPos.y - fontSize/2);
+  }
+
   // 画像を描画する関数
   function drawImage() {
     // 最初に1回だけclearRectを呼ぶ
@@ -239,6 +246,8 @@ Promise.all(imgPaths.map(path => {
     ctx.drawImage(images[0], dragPos.soldier.x - dragSize.width / 2, dragPos.soldier.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[1], dragPos.lancer.x - dragSize.width / 2, dragPos.lancer.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[2], dragPos.cavalry.x - dragSize.width / 2, dragPos.cavalry.y - dragSize.height / 2, dragSize.width, dragSize.height);
+    
+    drawCost(player);
 
     drawCircle(laneStartPos.left);
     drawCircle(laneStartPos.middle);

@@ -12,7 +12,10 @@ class Player {
         this.pos = { x: castlePos.x, y: castlePos.y }
     }
     addUnit(index, element) {
-        this.lanes[index].push(element); //末尾にelementを追加
+        if (this.myCost >= 1) {
+            this.myCost--;
+            this.lanes[index].push(element); //末尾にelementを追加
+        }
     }
     eraseUnit(index) {
         this.lanes[index].shift(); //配列の最初の要素をpopする
