@@ -3,6 +3,7 @@ const canvas = document.getElementById("myCanvas");
 canvas.width = document.documentElement.scrollWidth;
 canvas.height = document.documentElement.scrollHeight;
 
+//dragに必要な変数
 var isDrag = false;
 var mousePos = { x: 0, y: 0 };
 var selectNum = -1;
@@ -19,6 +20,7 @@ const images = [];
 //画像チップのサイズを保管
 const unitSize = { width: 64, height: 64 };
 const castleSize = { width: 256, height: 256 };
+//処理に利用するデータの保管
 const dragSize = { width: 128, height: 128 };
 const canvasSize = { width: canvas.width, height: canvas.height };
 const unitDir = { left: 315, middle: 270, right: 225 }
@@ -71,6 +73,7 @@ Promise.all(imgPaths.map(path => {
   });
 })).then(() => {
 
+  //HPバーを描画,対象のインスタンスと対象の大きさとバーの大きさを渡す
   function drawHP(obj, objSize, barSize) {
     let hpPar = (obj) => {
       if (obj.hp <= 0) return 0;
@@ -142,11 +145,13 @@ Promise.all(imgPaths.map(path => {
         if (Math.abs(playerObj1.lanes[i][0].pos.x - (canvasSize.width - playerObj2.pos.x)) < castleSize.width / 2 + unitSize.width / 2 &&
           Math.abs(playerObj1.lanes[i][0].pos.y - (canvasSize.height - playerObj2.pos.y)) < castleSize.height / 2 + unitSize.height / 2) {
           playerObj1.lanes[i][0].attack(playerObj2);
+          playerObj2.attack(playerObj1.lanes[i][0]);
         }
       } else if (playerObj1.lanes[i].length == 0 && playerObj2.lanes[playerObj2.lanes.length - i - 1].length != 0) {
         if (Math.abs(playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.x - (canvasSize.width - playerObj1.pos.x)) < castleSize.width / 2 + unitSize.width / 2 &&
           Math.abs(playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y - (canvasSize.height - playerObj1.pos.y)) < castleSize.height / 2 + unitSize.height / 2) {
           playerObj2.lanes[playerObj2.lanes.length - i - 1][0].attack(playerObj1);
+          playerObj1.attack(playerObj2.lanes[playerObj2.lanes.length - i - 1][0]);
         }
       }
     }
@@ -210,6 +215,7 @@ Promise.all(imgPaths.map(path => {
     }
   }
 
+  //ユニット配置場所を知らせるサークルを描画
   function drawCircle(pos) {
     ctx.beginPath();
     ctx.setLineDash([10, 10]);
@@ -222,10 +228,11 @@ Promise.all(imgPaths.map(path => {
     ctx.strokeStyle = 'rgb(0, 0, 0)';
   }
 
+  //保持コストを描画
   function drawCost(obj) {
     let fontSize = 60;
-    ctx.font = fontSize+'px Arial';
-    ctx.fillText(Math.floor(obj.myCost), costPos.x - fontSize/2*Math.floor(Math.log10(Math.max(1,obj.myCost))), costPos.y - fontSize/2);
+    ctx.font = fontSize + 'px Arial';
+    ctx.fillText(Math.floor(obj.myCost), costPos.x - fontSize / 2 * Math.floor(Math.log10(Math.max(1, obj.myCost))), costPos.y - fontSize / 2);
   }
 
   // 画像を描画する関数
@@ -246,7 +253,7 @@ Promise.all(imgPaths.map(path => {
     ctx.drawImage(images[0], dragPos.soldier.x - dragSize.width / 2, dragPos.soldier.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[1], dragPos.lancer.x - dragSize.width / 2, dragPos.lancer.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[2], dragPos.cavalry.x - dragSize.width / 2, dragPos.cavalry.y - dragSize.height / 2, dragSize.width, dragSize.height);
-    
+
     drawCost(player);
 
     drawCircle(laneStartPos.left);
@@ -259,44 +266,8 @@ Promise.all(imgPaths.map(path => {
     if (isDrag) ctx.drawImage(images[selectNum], mousePos.x - unitSize.width / 2, mousePos.y - unitSize.height / 2);
   }
 
-  function mainLoop() {
-    //ここに繰り返したいものを書く
-    //attack
-    attackUnit(player, enemy);
-
-    //move
-    updateUnit(player, enemy);
-    updateUnit(enemy, player);
-
-    //ユニット消去
-    eraseUnit(player);
-    eraseUnit(enemy);
-
-    //描画
-    drawImage();
-    // ボタンの外枠を描画
-    ctx.beginPath();
-    ctx.rect(50, 25, 100, 50);
-    ctx.stroke();
-
-    // ボタンに表示するテキストを設定
-    ctx.font = '20px Arial';
-    ctx.fillText('test', 80, 55);
-
-    // ボタンをクリックしたときの処理
-    canvas.addEventListener('click', function (event) {
-      // クリックされた座標を取得
-      var x = event.pageX - canvas.offsetLeft;
-      var y = event.pageY - canvas.offsetTop;
-
-      // ボタン内をクリックした場合
-      if (x > 50 && x < 150 && y > 25 && y < 75) {
-        //alert('Button clicked!');
-        player.pauseCostIncrease();
-      }
-
-    });
-
+  //ユニット追加に必要なドラッグアンドドロップの実装
+  function addUnitSystem() {
     canvas.addEventListener('mousedown', function (event) {
       //配置するユニットを選択
 
@@ -343,6 +314,47 @@ Promise.all(imgPaths.map(path => {
       mousePos.x = event.clientX;
       mousePos.y = event.clientY;
     });
+  }
+
+  function mainLoop() {
+    //ここに繰り返したいものを書く
+    //attack
+    attackUnit(player, enemy);
+
+    //move
+    updateUnit(player, enemy);
+    updateUnit(enemy, player);
+
+    //ユニット消去
+    eraseUnit(player);
+    eraseUnit(enemy);
+
+    //描画
+    drawImage();
+    // ボタンの外枠を描画
+    ctx.beginPath();
+    ctx.rect(50, 25, 100, 50);
+    ctx.stroke();
+
+    // ボタンに表示するテキストを設定
+    ctx.font = '20px Arial';
+    ctx.fillText('test', 80, 55);
+
+    // ボタンをクリックしたときの処理
+    canvas.addEventListener('click', function (event) {
+      // クリックされた座標を取得
+      var x = event.pageX - canvas.offsetLeft;
+      var y = event.pageY - canvas.offsetTop;
+
+      // ボタン内をクリックした場合
+      if (x > 50 && x < 150 && y > 25 && y < 75) {
+        //alert('Button clicked!');
+        player.pauseCostIncrease();
+      }
+
+    });
+
+    addUnitSystem();
 
     //mainloopを回すために必要
     requestAnimationFrame(mainLoop);

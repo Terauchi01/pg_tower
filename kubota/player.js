@@ -39,4 +39,9 @@ class Player {
         console.log(this.pauseFlag);
         this.remainTime = 1000 - performance.now();
     }
+
+    attack(obj) {
+        let damage = 1;
+        obj.hp -= damage;
+    }
 };
