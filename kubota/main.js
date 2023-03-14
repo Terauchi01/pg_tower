@@ -14,6 +14,7 @@ Promise.all(imgPaths.map(path => {
 })).then(() => {
 
   setEventListener();
+  playBGM();
 
   function mainLoop() {
     //ここに繰り返したいものを書く
