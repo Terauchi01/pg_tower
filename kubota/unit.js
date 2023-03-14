@@ -47,12 +47,12 @@ class Soldier extends Unit {
         super(x, y, 10, 2, 1, playerId, 1, unitId);
     }
 
-    attack(obj) {
+    attack(obj, damageFlag) {
         this.isMove = false;
         let damage = this.atk;
         if (obj.constructor === Lancer) damage *= 2;
         if (this.isCooperate) damage *= 2;
-        obj.hp -= damage;
+        if (damageFlag) obj.hp -= damage;
     }
 };
 
@@ -61,12 +61,12 @@ class Lancer extends Unit {
         super(x, y, 10, 2, 1, playerId, 2, unitId);
     }
 
-    attack(obj) {
+    attack(obj, damageFlag) {
         this.isMove = false;
         let damage = this.atk;
         if (obj.constructor === Cavalry) damage *= 2;
         if (this.isCooperate) damage *= 2;
-        obj.hp -= damage;
+        if (damageFlag) obj.hp -= damage;
     }
 };
 
@@ -75,11 +75,11 @@ class Cavalry extends Unit {
         super(x, y, 10, 2, 1, playerId, 3, unitId);
     }
 
-    attack(obj) {
+    attack(obj, damageFlag) {
         this.isMove = false;
         let damage = this.atk;
         if (obj.constructor === Soldier) damage *= 2;
         if (this.isCooperate) damage *= 2;
-        obj.hp -= damage;
+        if (damageFlag) obj.hp -= damage;
     }
 };

@@ -76,17 +76,23 @@ function setEventListener() {
     canvas.addEventListener('mouseup', function (event) {
         //ユニット配置
         let checkAdd = (pos, index) => {
+            let obj;
+            if (myPlayerId == player.playerId) {
+                obj = player;
+            } else {
+                obj = enemy;
+            }
             let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
             if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(circleSize, 2)) {
                 switch (selectNum) {
                     case 0:
-                        player.addUnit(index, new Soldier(pos.x, pos.y, myPlayerId, lastUnitId++));
+                        obj.addUnit(index, new Soldier(pos.x, pos.y, myPlayerId, lastUnitId++));
                         break;
                     case 1:
-                        player.addUnit(index, new Lancer(pos.x, pos.y, myPlayerId, lastUnitId++));
+                        obj.addUnit(index, new Lancer(pos.x, pos.y, myPlayerId, lastUnitId++));
                         break;
                     case 2:
-                        player.addUnit(index, new Cavalry(pos.x, pos.y, myPlayerId, lastUnitId++));
+                        obj.addUnit(index, new Cavalry(pos.x, pos.y, myPlayerId, lastUnitId++));
                         break;
                 }
                 isDrag = false;

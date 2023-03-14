@@ -3,7 +3,7 @@ class Player {
         this.playerId = playerID;
         this.hp = 100;
         this.HPMAX = 100;
-        this.myCost = 10;
+        this.myCost = 20;
         this.costIncrease = 10;
         this.lanes = [[], [], []];
         this.pauseFlag = false;
@@ -40,8 +40,10 @@ class Player {
         this.remainTime = 1000 - performance.now();
     }
 
-    attack(obj) {
-        let damage = 1;
-        obj.hp -= damage;
+    attack(obj, damageFlag) {
+        if (damageFlag) {
+            let damage = 1;
+            obj.hp -= damage;
+        }
     }
 };
