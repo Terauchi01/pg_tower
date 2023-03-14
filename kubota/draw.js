@@ -38,8 +38,8 @@ function drawUnit(playerObj) {
         for (obj of ary) {
             let px = obj.pos.x, py = obj.pos.y, index = 0;
             if (playerObj.playerId != 1) {
-                px = canvasSize.width - px;
-                py = canvasSize.height - py;
+                px = canvas.width - px;
+                py = canvas.height - py;
                 index = 3;
             }
             switch (obj.constructor) {
@@ -72,27 +72,27 @@ function drawCircle(pos) {
 }
 
 //保持コストを描画
-function drawCost(obj) {
+function drawUnitPoint(obj) {
     let fontSize = 60;
     ctx.font = fontSize + 'px Arial';
-    ctx.fillText(Math.floor(obj.myCost), costPos.x - fontSize / 2 * Math.floor(Math.log10(Math.max(1, obj.myCost))), costPos.y - fontSize / 2);
+    ctx.fillText(Math.floor(obj.myUnitPoint), unitPointPos.x - fontSize / 2 * Math.floor(Math.log10(Math.max(1, obj.myUnitPoint))), unitPointPos.y - fontSize / 2);
 }
 
 function drawButton() {
     // ボタンの外枠を描画
     ctx.beginPath();
-    ctx.rect(50, 25, 100, 50);
+    ctx.rect(buttonPos.x, buttonPos.y, buttonSize.width, buttonSize.height);
     ctx.stroke();
 
     // ボタンに表示するテキストを設定
     ctx.font = '20px Arial';
-    ctx.fillText('test', 80, 55);
+    ctx.fillText('test', buttonPos.x + 27, buttonPos.y+ 27);
 }
 
 // 画像を描画する関数
 function drawImage() {
     // 最初に1回だけclearRectを呼ぶ
-    ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     //x, yを更新することで画像の座標を変更できる
     if (player.hp > 0) {
@@ -108,7 +108,7 @@ function drawImage() {
     ctx.drawImage(images[1], dragPos.lancer.x - dragSize.width / 2, dragPos.lancer.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[2], dragPos.cavalry.x - dragSize.width / 2, dragPos.cavalry.y - dragSize.height / 2, dragSize.width, dragSize.height);
 
-    drawCost(player);
+    drawUnitPoint(player);
 
     drawCircle(laneStartPos.left);
     drawCircle(laneStartPos.middle);

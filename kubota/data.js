@@ -21,6 +21,13 @@ const circleSize = 64;
 
 const ctx = canvas.getContext("2d");
 
+//ボタンのサイズ定義
+const buttonPos = {x: canvas.width / 25, y: canvas.height / 25}
+const buttonSize = {width:100, height:50}
+
+//ポーズのフラグ
+var isPaused = false;
+
 // 画像の読み込み
 const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/soldier2.png", "Image/lancer2.png", "Image/cavalry2.png", "Image/castle.png"];
 
@@ -32,11 +39,10 @@ const unitSize = { width: 64, height: 64 };
 const castleSize = { width: 256, height: 256 };
 //処理に利用するデータの保管
 const dragSize = { width: 128, height: 128 };
-const canvasSize = { width: canvas.width, height: canvas.height };
 const unitDir = { left: 315, middle: 270, right: 225 };
 const hpSize = { width: 20, height: 4 };
 const castleHpSize = { width: 200, height: 10 };
-const costPos = { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 4 };
+const unitPointPos = { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 4 };
 
 //ユニットの初期位置を設定
 const laneStartPos = {
@@ -52,6 +58,7 @@ const dragPos = {
 
 //各プレイヤーの初期化、現状ユニット追加が未実装の為初期でユニットを配置してテストを行う
 const player = new Player(1, { x: canvas.width / 2, y: canvas.height - castleSize.height / 2 });
+player.startUnitPointIncrease()
 
 const enemy = new Player(2, { x: canvas.width / 2, y: canvas.height - castleSize.height / 2 });
 
@@ -116,9 +123,16 @@ function setEventListener() {
         let y = event.pageY - canvas.offsetTop;
 
         // ボタン内をクリックした場合
-        if (x > 50 && x < 150 && y > 25 && y < 75) {
+        if (x > buttonPos.x && x < buttonPos.x + buttonSize.width && y > buttonPos.y && y < buttonPos.y + buttonSize.height) {
             //alert('Button clicked!');
-            player.pauseCostIncrease();
+            if(isPaused){
+                player.startUnitPointIncrease();
+            }else{
+                player.pauseUnitPointIncrease();
+            }
+            isPaused = !isPaused;
+            //alert(isPaused);
+            console.log("paused");
         }
     })
 }

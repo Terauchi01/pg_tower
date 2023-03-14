@@ -3,41 +3,43 @@ class Player {
         this.playerId = playerID;
         this.hp = 100;
         this.HPMAX = 100;
-        this.myCost = 20;
-        this.costIncrease = 10;
+        this.myUnitPoint = 20;
+        this.unitPointIncrease = 10;
+        this.unitPointIncreaseTick = 1000;
         this.lanes = [[], [], []];
-        this.pauseFlag = false;
-        this.TIME_COST_UP = 1000;
-        this.remainTime = 1;
+        this.TIME_unitPoint_UP = 1000;
+        this.remainTime = 0;
+        this.unitPointIncreaseUpdateTime = 0;
         this.pos = { x: castlePos.x, y: castlePos.y }
+        this.intervalID = null; //clearIntercalで使うため
     }
     addUnit(index, element) {
-        if (this.myCost >= 1) {
-            this.myCost--;
+        if (this.myUnitPoint >= 1) {
+            this.myUnitPoint--;
             this.lanes[index].push(element); //末尾にelementを追加
         }
     }
     eraseUnit(index) {
         this.lanes[index].shift(); //配列の最初の要素をpopする
     }
-    startCostIncrease() {
-        let isFirstInterval = true;
-        if (!this.pauseFlag) {
-            /* setTimeout(()=> {
-                isFirstInterval = false;
-            }, this.remainTime); */
-            /* /* if(!isFirstInterval){ */
-            setInterval(() => {
-                console.log(performance.now());
-            }, 1000);
-        }
+
+    startUnitPointIncrease() {
+    //ポースする前までの秒数分まつための処理
+    setTimeout(()=> {
+        this.unitPointIncreaseUpdateTime = performance.now();
+        console.log(performance.now());
+        this.myunitPoint += this.unitPointIncrease;
+        this.intervalID = setInterval(() => { //pauseunitPointIncreaseで停止させるためにintervalIDに入れる
+            this.unitPointIncreaseUpdateTime = performance.now();
+            console.log(performance.now());
+            this.myunitPoint += this.unitPointIncrease;
+        }, this.unitPointIncreaseTick);
+    }, this.remainTime);
     }
 
-
-    pauseCostIncrease() {
-        this.pauseFlag = !this.pauseFlag;
-        console.log(this.pauseFlag);
-        this.remainTime = 1000 - performance.now();
+    pauseUnitPointIncrease() {
+        clearInterval(this.intervalID);
+        this.remainTime = this.unitPointIncreaseTick - (performance.now() - this.unitPointIncreaseUpdateTime);
     }
 
     attack(obj, damageFlag) {
@@ -46,4 +48,4 @@ class Player {
             obj.hp -= damage;
         }
     }
-};
+}
