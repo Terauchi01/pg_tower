@@ -5,9 +5,13 @@ function drawHP(obj, objSize, barSize) {
         return obj.hp / obj.HPMAX;
     }
     let hpPos = { x: obj.pos.x, y: obj.pos.y };
-    if (obj.playerId != 1) {
+    if (obj.playerId != myPlayerId) {
         hpPos.x = canvas.width - hpPos.x;
         hpPos.y = canvas.height - hpPos.y;
+    } else {
+        if (obj.constructor === Player) {
+            hpPos.y += objSize.height - barSize.height * 2;
+        }
     }
     ctx.beginPath();
     ctx.rect(hpPos.x - barSize.width / 2, hpPos.y - objSize.height / 2, barSize.width, barSize.height);
@@ -92,12 +96,12 @@ function drawImage() {
 
     //x, yを更新することで画像の座標を変更できる
     if (player.hp > 0) {
-        drawHP(player, castleSize, castleHpSize);
         ctx.drawImage(images[6], player.pos.x - castleSize.width / 2, player.pos.y - castleSize.height / 2);
+        drawHP(player, castleSize, castleHpSize);
     }
     if (enemy.hp > 0) {
-        drawHP(enemy, castleSize, castleHpSize);
         ctx.drawImage(images[6], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSize.height / 2);
+        drawHP(enemy, castleSize, castleHpSize);
     }
 
     ctx.drawImage(images[0], dragPos.soldier.x - dragSize.width / 2, dragPos.soldier.y - dragSize.height / 2, dragSize.width, dragSize.height);

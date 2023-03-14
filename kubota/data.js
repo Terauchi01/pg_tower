@@ -8,6 +8,15 @@ var isDrag = false;
 var mousePos = { x: 0, y: 0 };
 var selectNum = -1;
 
+//最後に追加したunit固有のid
+var lastUnitId = 0;
+
+var myPlayerId = 1;
+
+var countTimer = 0;
+var beforeTime = 0;
+const attackWait = 1000;
+
 const circleSize = 64;
 
 const ctx = canvas.getContext("2d");
@@ -31,14 +40,14 @@ const costPos = { x: canvas.width - dragSize.width, y: canvas.height - dragSize.
 
 //ユニットの初期位置を設定
 const laneStartPos = {
-  left: { x: canvas.width / 2 - castleSize.width / 2 - unitSize.width / 2, y: canvas.height - castleSize.height / 2 },
-  middle: { x: canvas.width / 2, y: canvas.height - castleSize.height - unitSize.height / 2 },
-  right: { x: canvas.width / 2 + castleSize.width / 2 + unitSize.width / 2, y: canvas.height - castleSize.height / 2 }
+    left: { x: canvas.width / 2 - castleSize.width / 2 - unitSize.width / 2, y: canvas.height - castleSize.height / 2 },
+    middle: { x: canvas.width / 2, y: canvas.height - castleSize.height - unitSize.height / 2 },
+    right: { x: canvas.width / 2 + castleSize.width / 2 + unitSize.width / 2, y: canvas.height - castleSize.height / 2 }
 };
 const dragPos = {
-  soldier: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 3 },
-  lancer: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 2 },
-  cavalry: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height }
+    soldier: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 3 },
+    lancer: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 2 },
+    cavalry: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height }
 };
 
 //各プレイヤーの初期化、現状ユニット追加が未実装の為初期でユニットを配置してテストを行う
@@ -46,65 +55,64 @@ const player = new Player(1, { x: canvas.width / 2, y: canvas.height - castleSiz
 
 const enemy = new Player(2, { x: canvas.width / 2, y: canvas.height - castleSize.height / 2 });
 
-//ユニット追加に必要なドラッグアンドドロップの実装
 //EventListenerの設定,一度のみ呼ばれる
-function addUnitSystem() {
+function setEventListener() {
     canvas.addEventListener('mousedown', function (event) {
-      //配置するユニットを選択
-  
-      let checkDrag = (pos, index) => {
-        let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
-        if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(dragSize.height / 2, 2)) {
-          selectNum = index;
-          isDrag = true;
+        //配置するユニットを選択
+
+        let checkDrag = (pos, index) => {
+            let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
+            if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(dragSize.height / 2, 2)) {
+                selectNum = index;
+                isDrag = true;
+            }
         }
-      }
-  
-      if (!isDrag) checkDrag(dragPos.soldier, 0);
-      if (!isDrag) checkDrag(dragPos.lancer, 1);
-      if (!isDrag) checkDrag(dragPos.cavalry, 2);
+
+        if (!isDrag) checkDrag(dragPos.soldier, 0);
+        if (!isDrag) checkDrag(dragPos.lancer, 1);
+        if (!isDrag) checkDrag(dragPos.cavalry, 2);
     });
-  
+
     canvas.addEventListener('mouseup', function (event) {
-      //ユニット配置
-      let checkAdd = (pos, index) => {
-        let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
-        if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(circleSize, 2)) {
-          switch (selectNum) {
-            case 0:
-              player.addUnit(index, new Soldier(pos.x, pos.y, 1, 100));
-              break;
-            case 1:
-              player.addUnit(index, new Lancer(pos.x, pos.y, 1, 100));
-              break;
-            case 2:
-              player.addUnit(index, new Cavalry(pos.x, pos.y, 1, 100));
-              break;
-          }
-          isDrag = false;
+        //ユニット配置
+        let checkAdd = (pos, index) => {
+            let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
+            if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(circleSize, 2)) {
+                switch (selectNum) {
+                    case 0:
+                        player.addUnit(index, new Soldier(pos.x, pos.y, myPlayerId, lastUnitId++));
+                        break;
+                    case 1:
+                        player.addUnit(index, new Lancer(pos.x, pos.y, myPlayerId, lastUnitId++));
+                        break;
+                    case 2:
+                        player.addUnit(index, new Cavalry(pos.x, pos.y, myPlayerId, lastUnitId++));
+                        break;
+                }
+                isDrag = false;
+            }
         }
-      }
-  
-      if (isDrag) checkAdd(laneStartPos.left, 0);
-      if (isDrag) checkAdd(laneStartPos.middle, 1);
-      if (isDrag) checkAdd(laneStartPos.right, 2);
-      isDrag = false;
+
+        if (isDrag) checkAdd(laneStartPos.left, 0);
+        if (isDrag) checkAdd(laneStartPos.middle, 1);
+        if (isDrag) checkAdd(laneStartPos.right, 2);
+        isDrag = false;
     });
-  
+
     canvas.addEventListener('mousemove', function (event) {
-      mousePos.x = event.clientX;
-      mousePos.y = event.clientY;
+        mousePos.x = event.clientX;
+        mousePos.y = event.clientY;
     });
-  
+
     canvas.addEventListener('click', function (event) {
-      // クリックされた座標を取得
-      let x = event.pageX - canvas.offsetLeft;
-      let y = event.pageY - canvas.offsetTop;
-  
-      // ボタン内をクリックした場合
-      if (x > 50 && x < 150 && y > 25 && y < 75) {
-        //alert('Button clicked!');
-        player.pauseCostIncrease();
-      }
+        // クリックされた座標を取得
+        let x = event.pageX - canvas.offsetLeft;
+        let y = event.pageY - canvas.offsetTop;
+
+        // ボタン内をクリックした場合
+        if (x > 50 && x < 150 && y > 25 && y < 75) {
+            //alert('Button clicked!');
+            player.pauseCostIncrease();
+        }
     })
-  }
+}

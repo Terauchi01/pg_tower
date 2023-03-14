@@ -3,7 +3,7 @@ class Player {
         this.playerId = playerID;
         this.hp = 100;
         this.HPMAX = 100;
-        this.myCost = 0;
+        this.myCost = 10;
         this.costIncrease = 10;
         this.lanes = [[], [], []];
         this.pauseFlag = false;

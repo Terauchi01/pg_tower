@@ -44,7 +44,7 @@ class Unit {
 
 class Soldier extends Unit {
     constructor(x, y, playerId, unitId) {
-        super(x, y, 2000, 2, 1, playerId, 1, unitId);
+        super(x, y, 10, 2, 1, playerId, 1, unitId);
     }
 
     attack(obj) {
@@ -58,7 +58,7 @@ class Soldier extends Unit {
 
 class Lancer extends Unit {
     constructor(x, y, playerId, unitId) {
-        super(x, y, 2000, 2, 1, playerId, 2, unitId);
+        super(x, y, 10, 2, 1, playerId, 2, unitId);
     }
 
     attack(obj) {
@@ -72,7 +72,7 @@ class Lancer extends Unit {
 
 class Cavalry extends Unit {
     constructor(x, y, playerId, unitId) {
-        super(x, y, 2000, 2, 1, playerId, 3, unitId);
+        super(x, y, 10, 2, 1, playerId, 3, unitId);
     }
 
     attack(obj) {

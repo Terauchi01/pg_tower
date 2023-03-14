@@ -86,8 +86,13 @@ function eraseUnit(playerObj) {
 
 //メインで行う処理
 function dataUpdates() {
+    countTimer += performance.now() - beforeTime;
+    beforeTime = performance.now();
     //attack
-    attackUnit(player, enemy);
+    if (countTimer >= attackWait) {
+        attackUnit(player, enemy);
+        countTimer -= attackWait;
+    }
 
     //move
     updateUnit(player, enemy);
