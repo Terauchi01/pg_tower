@@ -4,14 +4,13 @@ class Player {
         this.hp = 100;
         this.HPMAX = 100;
         this.myUnitPoint = 20;
-        this.unitPointIncrease = 10;
+        this.unitPointIncrease = 1;
         this.unitPointIncreaseTick = 1000;
         this.lanes = [[], [], []];
-        this.TIME_unitPoint_UP = 1000;
         this.remainTime = 0;
         this.unitPointIncreaseUpdateTime = 0;
         this.pos = { x: castlePos.x, y: castlePos.y }
-        this.intervalID = null; //clearIntercalで使うため
+        this.intervalID = null; //clearIntervalで使うため
     }
     addUnit(index, element) {
         if (this.myUnitPoint >= 1) {
@@ -28,11 +27,11 @@ class Player {
     setTimeout(()=> {
         this.unitPointIncreaseUpdateTime = performance.now();
         console.log(performance.now());
-        this.myunitPoint += this.unitPointIncrease;
+        this.myUnitPoint += this.unitPointIncrease;
         this.intervalID = setInterval(() => { //pauseunitPointIncreaseで停止させるためにintervalIDに入れる
             this.unitPointIncreaseUpdateTime = performance.now();
             console.log(performance.now());
-            this.myunitPoint += this.unitPointIncrease;
+            this.myUnitPoint += this.unitPointIncrease;
         }, this.unitPointIncreaseTick);
     }, this.remainTime);
     }
