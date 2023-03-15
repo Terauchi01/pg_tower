@@ -13,7 +13,7 @@ function StartScreen() {
                 <li><Link to="/result">Result</Link></li>
             </ul>
         </div>
-      );
+    );
 }
 
 export default StartScreen;
