@@ -3,7 +3,7 @@ class Player {
         this.playerId = playerID;
         this.hp = 100;
         this.HPMAX = 100;
-        this.myUnitPoint = 20;
+        this.myUnitPoint = 0;
         this.unitPointIncrease = 1;
         this.unitPointIncreaseTick = 1000;
         this.lanes = [[], [], []];

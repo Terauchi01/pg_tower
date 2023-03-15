@@ -11,14 +11,14 @@ function attackUnit(playerObj1, playerObj2, damageFlag) {
                 obj2.attack(obj1, damageFlag);
             }
         } else if (playerObj1.lanes[i].length != 0 && playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0) {
-            if (Math.abs(playerObj1.lanes[i][0].pos.x - (canvas.width - playerObj2.pos.x)) < castleSize.width / 2 + unitSize.width / 2 &&
-                Math.abs(playerObj1.lanes[i][0].pos.y - (canvas.height - playerObj2.pos.y)) < castleSize.height / 2 + unitSize.height / 2) {
+            if (Math.abs(playerObj1.lanes[i][0].pos.x - (canvas.width - playerObj2.pos.x)) < castleSize.width / 2 &&
+                Math.abs(playerObj1.lanes[i][0].pos.y - (canvas.height - playerObj2.pos.y)) < castleSize.height / 2) {
                 playerObj1.lanes[i][0].attack(playerObj2, damageFlag);
                 playerObj2.attack(playerObj1.lanes[i][0], damageFlag);
             }
         } else if (playerObj1.lanes[i].length == 0 && playerObj2.lanes[playerObj2.lanes.length - i - 1].length != 0) {
-            if (Math.abs(playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.x - (canvas.width - playerObj1.pos.x)) < castleSize.width / 2 + unitSize.width / 2 &&
-                Math.abs(playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y - (canvas.height - playerObj1.pos.y)) < castleSize.height / 2 + unitSize.height / 2) {
+            if (Math.abs(playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.x - (canvas.width - playerObj1.pos.x)) < castleSize.width / 2 &&
+                Math.abs(playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y - (canvas.height - playerObj1.pos.y)) < castleSize.height / 2) {
                 playerObj2.lanes[playerObj2.lanes.length - i - 1][0].attack(playerObj1, damageFlag);
                 playerObj1.attack(playerObj2.lanes[playerObj2.lanes.length - i - 1][0], damageFlag);
             }
@@ -86,10 +86,16 @@ function eraseUnit(playerObj) {
 
 //メインで行う処理
 function dataUpdates() {
+    if (isPaused) {
+        beforeTime = performance.now();
+        return;
+    }
     countTimer += performance.now() - beforeTime;
     beforeTime = performance.now();
-    /* cpuAddUnit(enemy);
-    cpuAddUnit(player); */
+    
+
+    cpuAddUnit(enemy);
+    //cpuAddUnit(player);
     //attack
     let damageFlag = false
     if (countTimer >= attackWait) {

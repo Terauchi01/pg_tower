@@ -46,9 +46,9 @@ const unitPointPos = { x: canvas.width - dragSize.width, y: canvas.height - drag
 
 //ユニットの初期位置を設定
 const laneStartPos = {
-    left: { x: canvas.width / 2 - castleSize.width / 2 - unitSize.width / 2, y: canvas.height - castleSize.height / 2 },
-    middle: { x: canvas.width / 2, y: canvas.height - castleSize.height - unitSize.height / 2 },
-    right: { x: canvas.width / 2 + castleSize.width / 2 + unitSize.width / 2, y: canvas.height - castleSize.height / 2 }
+    left: { x: canvas.width / 2 - castleSize.width / 2, y: canvas.height - castleSize.height / 2 },
+    middle: { x: canvas.width / 2, y: canvas.height - castleSize.height },
+    right: { x: canvas.width / 2 + castleSize.width / 2, y: canvas.height - castleSize.height / 2 }
 };
 const dragPos = {
     soldier: { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 3 },
@@ -58,9 +58,10 @@ const dragPos = {
 
 //各プレイヤーの初期化、現状ユニット追加が未実装の為初期でユニットを配置してテストを行う
 const player = new Player(1, { x: canvas.width / 2, y: canvas.height - castleSize.height / 2 });
-player.startUnitPointIncrease()
+player.startUnitPointIncrease();
 
 const enemy = new Player(2, { x: canvas.width / 2, y: canvas.height - castleSize.height / 2 });
+enemy.startUnitPointIncrease();
 
 //EventListenerの設定,一度のみ呼ばれる
 function setEventListener() {
@@ -127,8 +128,10 @@ function setEventListener() {
             //alert('Button clicked!');
             if(isPaused){
                 player.startUnitPointIncrease();
+                enemy.startUnitPointIncrease();
             }else{
                 player.pauseUnitPointIncrease();
+                enemy.pauseUnitPointIncrease();
             }
             isPaused = !isPaused;
             //alert(isPaused);
