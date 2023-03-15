@@ -12,6 +12,7 @@ class Player {
         this.unitPointIncreaseUpdateTime = 0;
         this.pos = { x: castlePos.x, y: castlePos.y }
         this.intervalID = null; //clearIntervalで使うため
+        this.timeoutID = null;
     }
     addUnit(index, element) {
         if (this.myUnitPoint >= this.unitCost) {
@@ -25,7 +26,7 @@ class Player {
 
     startUnitPointIncrease() {
         //ポースする前までの秒数分まつための処理
-        setTimeout(() => {
+        this.timeoutID = setTimeout(() => {
             this.unitPointIncreaseUpdateTime = performance.now();
             console.log(performance.now());
             this.myUnitPoint += this.unitPointIncrease;
@@ -34,10 +35,12 @@ class Player {
                 console.log(performance.now());
                 this.myUnitPoint += this.unitPointIncrease;
             }, this.unitPointIncreaseTick);
+            this.remainTime = 0;
         }, this.remainTime);
     }
 
     pauseUnitPointIncrease() {
+        if (this.remainTime != 0) clearTimeout(this.timeoutID);
         clearInterval(this.intervalID);
         this.remainTime = this.unitPointIncreaseTick - (performance.now() - this.unitPointIncreaseUpdateTime);
     }

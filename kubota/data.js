@@ -67,7 +67,7 @@ enemy.startUnitPointIncrease();
 function setEventListener() {
     canvas.addEventListener('mousedown', function (event) {
         //配置するユニットを選択
-
+        if (isPaused) return;
         let checkDrag = (pos, index) => {
             let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
             if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(dragSize.height / 2, 2)) {

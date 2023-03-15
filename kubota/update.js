@@ -86,7 +86,11 @@ function eraseUnit(playerObj) {
 
 //メインで行う処理
 function dataUpdates() {
-    if (player.hp == 0 || enemy.hp == 0) isPaused = true;
+    if (player.hp == 0 || enemy.hp == 0) {
+        isPaused = true;
+        //player.pauseUnitPointIncrease();
+        //enemy.pauseUnitPointIncrease();
+    }
     if (isPaused) {
         beforeTime = performance.now();
         return;
