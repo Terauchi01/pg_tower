@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import StartScreen from '../components/StartScreen';
+import StartScreen from '../StartScreen';
 import Home from '../components/Home';
 import RoomMatch from '../components/RoomMatch';
 import RoomPassword from '../components/RoomPassword';

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 //simport { Link } from 'react-router-dom';
 
 
@@ -7,21 +7,17 @@ function RoomMatch() {
     return (
       <div>
         <h1>RoomMatch</h1>
+        <ul>
+          <li><Link to="/">StartScreen</Link></li>
+          <li><Link to="/home">home</Link></li>
+          <li><Link to="/room-match">Room Match</Link></li>
+          <li><Link to="/room-password">Room Password</Link></li>
+          <li><Link to="/cpu-battle">CPU Battle</Link></li>
+          <li><Link to="/battle">Battle</Link></li>
+          <li><Link to="/result">Result</Link></li>
+        </ul>
       </div>
     );
   }
-
-/* function Navigation() {
-  return (
-    <ul>
-      <li>
-        <Link to="/">roomMatch</Link>
-      </li>
-      <li>
-        <Link to="/about">About</Link>
-      </li>
-    </ul>
-  );
-} */
 
 export default RoomMatch;
