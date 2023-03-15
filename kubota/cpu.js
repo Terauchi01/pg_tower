@@ -2,7 +2,7 @@ function cpuAddUnit(obj) {
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
-    if (obj.myUnitPoint >= 1) {
+    if (obj.myUnitPoint >= obj.unitCost) {
         let index = getRandomInt(3);
         let elementType = getRandomInt(3);
         let pos = { x: 0, y: 0 };
