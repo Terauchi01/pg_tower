@@ -27,6 +27,8 @@ const buttonSize = {width:100, height:50}
 
 //ポーズのフラグ
 var isPaused = false;
+//終了フラグ
+var isEnd = false;
 
 // 画像の読み込み
 const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/soldier2.png", "Image/lancer2.png", "Image/cavalry2.png", "Image/castle.png"];

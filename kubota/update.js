@@ -86,10 +86,11 @@ function eraseUnit(playerObj) {
 
 //メインで行う処理
 function dataUpdates() {
-    if (player.hp == 0 || enemy.hp == 0) {
+    if (player.hp <= 0 || enemy.hp <= 0) {
+        isEnd = true;
         isPaused = true;
-        //player.pauseUnitPointIncrease();
-        //enemy.pauseUnitPointIncrease();
+        player.pauseUnitPointIncrease();
+        enemy.pauseUnitPointIncrease();
     }
     if (isPaused) {
         beforeTime = performance.now();
@@ -97,7 +98,6 @@ function dataUpdates() {
     }
     countTimer += performance.now() - beforeTime;
     beforeTime = performance.now();
-    
 
     cpuAddUnit(enemy);
     //cpuAddUnit(player);

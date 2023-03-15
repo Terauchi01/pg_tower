@@ -86,7 +86,7 @@ function drawButton() {
 
     // ボタンに表示するテキストを設定
     ctx.font = '20px Arial';
-    ctx.fillText('test', buttonPos.x + 27, buttonPos.y+ 27);
+    ctx.fillText('Pause', buttonPos.x + 27, buttonPos.y+ 27);
 }
 
 // 画像を描画する関数
