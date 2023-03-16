@@ -7,6 +7,7 @@ canvas.height = document.documentElement.scrollHeight;
 var isDrag = false;
 var mousePos = { x: 0, y: 0 };
 var selectNum = -1;
+var isShortcut = false;
 
 //最後に追加したunit固有のid
 var lastUnitId = 0;
@@ -22,8 +23,8 @@ const circleSize = 64;
 const ctx = canvas.getContext("2d");
 
 //ボタンのサイズ定義
-const buttonPos = {x: canvas.width / 25, y: canvas.height / 25}
-const buttonSize = {width:100, height:50}
+const buttonPos = { x: canvas.width / 25, y: canvas.height / 25 }
+const buttonSize = { width: 100, height: 50 }
 
 //ポーズのフラグ
 var isPaused = false;
@@ -31,7 +32,8 @@ var isPaused = false;
 var isEnd = false;
 
 // 画像の読み込み
-const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/soldier2.png", "Image/lancer2.png", "Image/cavalry2.png", "Image/castle.png"];
+const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/soldier2.png", "Image/lancer2.png", "Image/cavalry2.png", "Image/castle.png", 
+                  "Image/frame1.png", "Image/frame2.png", "Image/frame3.png", "Image/background.png", "Image/arrow.png", "Image/slash.png"];
 
 //画像のインスタンスを保管する配列
 const images = [];
@@ -128,10 +130,10 @@ function setEventListener() {
         // ボタン内をクリックした場合
         if (x > buttonPos.x && x < buttonPos.x + buttonSize.width && y > buttonPos.y && y < buttonPos.y + buttonSize.height) {
             //alert('Button clicked!');
-            if(isPaused){
+            if (isPaused) {
                 player.startUnitPointIncrease();
                 enemy.startUnitPointIncrease();
-            }else{
+            } else {
                 player.pauseUnitPointIncrease();
                 enemy.pauseUnitPointIncrease();
             }
@@ -140,4 +142,45 @@ function setEventListener() {
             console.log("paused");
         }
     })
+
+    //ここはdocumentにしないとダメ絶対
+    //ショートカットキーを用いたユニット生成
+    document.addEventListener('keydown', function (event) {
+        switch (event.key) {
+            case '1':
+                isDrag = true;
+                isShortcut = true;
+                selectNum = 0;
+                break;
+            case '2':
+                isDrag = true;
+                isShortcut = true;
+                selectNum = 1;
+                break;
+            case '3':
+                isDrag = true;
+                isShortcut = true;
+                selectNum = 2;
+                break;
+        }
+    });
+
+    document.addEventListener('keyup', function (event) {
+        if (isShortcut) {
+            switch (event.key) {
+                case '1':
+                    isDrag = false;
+                    isShortcut = false;
+                    break;
+                case '2':
+                    isDrag = false;
+                    isShortcut = false;
+                    break;
+                case '3':
+                    isDrag = false;
+                    isShortcut = false;
+                    break;
+            }
+        }
+    });
 }

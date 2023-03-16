@@ -94,6 +94,8 @@ function drawImage() {
     // 最初に1回だけclearRectを呼ぶ
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    ctx.drawImage(images[10], 0, 0, canvas.width, canvas.height);
+
     //x, yを更新することで画像の座標を変更できる
     if (player.hp > 0) {
         ctx.drawImage(images[6], player.pos.x - castleSize.width / 2, player.pos.y - castleSize.height / 2);
@@ -107,6 +109,10 @@ function drawImage() {
     ctx.drawImage(images[0], dragPos.soldier.x - dragSize.width / 2, dragPos.soldier.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[1], dragPos.lancer.x - dragSize.width / 2, dragPos.lancer.y - dragSize.height / 2, dragSize.width, dragSize.height);
     ctx.drawImage(images[2], dragPos.cavalry.x - dragSize.width / 2, dragPos.cavalry.y - dragSize.height / 2, dragSize.width, dragSize.height);
+
+    ctx.drawImage(images[7], dragPos.soldier.x - dragSize.width / 2, dragPos.soldier.y - dragSize.height / 2, dragSize.width, dragSize.height);
+    ctx.drawImage(images[8], dragPos.lancer.x - dragSize.width / 2, dragPos.lancer.y - dragSize.height / 2, dragSize.width, dragSize.height);
+    ctx.drawImage(images[9], dragPos.cavalry.x - dragSize.width / 2, dragPos.cavalry.y - dragSize.height / 2, dragSize.width, dragSize.height);
 
     drawUnitPoint(player);
 
