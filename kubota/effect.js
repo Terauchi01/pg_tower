@@ -11,14 +11,21 @@ class UnitAttackEffect extends Effect {
         super();
         this.pos = pos;
         this.num = 10;
-        this.alpha = [];
         this.time = [];
+        this.edgePos = [];
+        this.dir = [];
+        this.speed = [];
+        for (let i = 0; i < this.num; i++) {
+            this.time.push(Math.random(1000));
+        }
         this.makeTime = performance.now();
+        this.range = 256;
     }
 
     draw() {
         let edge = (i) => {
-            ctx.globalAlpha = this.alpha[i];
+            ctx.globalAlpha = Math.max(0, this.range - Math.abs(this.time[i] - (performance.now() - this.makeTime)))/this.range;
+            ctx.drawImage(images[12], pos.x, pos.y);
         }
         
         ctx.globalAlpha(1);
