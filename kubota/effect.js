@@ -18,13 +18,14 @@ class UnitAttackEffect extends Effect {
         this.randomRange = 12;
         this.countTime = 0;
         this.beforeTime = performance.now();
+        this.timeRange = 256;
+        this.timeRandomRange = 1000;
         for (let i = 0; i < this.num; i++) {
-            this.time[i] = Math.random() * (1000 - 512) + 256;
+            this.time[i] = Math.random() * (this.timeRandomRange);
             this.dir[i] = Math.random() * 360 * Math.PI / 180;
             this.edgePos[i] = { x: Math.random() * this.randomRange, y: Math.random() * this.randomRange };
             this.size[i] = Math.random() * unitSize.height / 2;
         }
-        this.timeRange = 256;
     }
 }
 
@@ -74,7 +75,7 @@ function drawAttackEffect() {
             for (let i = 0; i < obj.num; i++) {
                 edge(i);
             }
-            if (performance.new - obj.makeTime > 1000) obj.yet = true;
+            if (performance.new - obj.makeTime > obj.timeRandomRange) obj.yet = true;
         } else {
             console.log(obj);
             ctx.save();
