@@ -28,11 +28,11 @@ class Player {
         //ポースする前までの秒数分まつための処理
         this.timeoutID = setTimeout(() => {
             this.unitPointIncreaseUpdateTime = performance.now();
-            console.log(performance.now());
+            //console.log(performance.now());
             this.myUnitPoint += this.unitPointIncrease;
             this.intervalID = setInterval(() => { //pauseunitPointIncreaseで停止させるためにintervalIDに入れる
                 this.unitPointIncreaseUpdateTime = performance.now();
-                console.log(performance.now());
+                //console.log(performance.now());
                 this.myUnitPoint += this.unitPointIncrease;
             }, this.unitPointIncreaseTick);
             this.remainTime = 0;

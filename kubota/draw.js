@@ -125,5 +125,7 @@ function drawImage() {
 
     drawButton();
 
+    drawAttackEffect();
+
     if (isDrag) ctx.drawImage(images[selectNum], mousePos.x - unitSize.width / 2, mousePos.y - unitSize.height / 2);
 }

@@ -17,6 +17,7 @@ var myPlayerId = 1;
 var countTimer = 0;
 var beforeTime = 0;
 const attackWait = 1000;
+var effect = [];
 
 const circleSize = 64;
 

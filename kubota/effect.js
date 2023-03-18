@@ -3,69 +3,89 @@ class Effect {
         this.yet = false;
     }
 
-    draw() {}
+    //draw() { }
 }
 
 class UnitAttackEffect extends Effect {
     constructor(pos) {
         super();
-        this.pos = pos;
+        this.pos = {x:pos.x, y:pos.y};
         this.num = 10;
         this.time = [];
         this.edgePos = [];
         this.dir = [];
-        this.speed = [];
+        this.size = [];
+        this.randomRange = 12;
+        this.countTime = 0;
+        this.beforeTime = performance.now();
         for (let i = 0; i < this.num; i++) {
-            this.time.push(Math.random(1000));
+            this.time[i] = Math.random() * (1000 - 512) + 256;
+            this.dir[i] = Math.random() * 360 * Math.PI / 180;
+            this.edgePos[i] = { x: Math.random() * this.randomRange, y: Math.random() * this.randomRange };
+            this.size[i] = Math.random() * unitSize.height / 2;
         }
-        this.makeTime = performance.now();
-        this.range = 256;
+        this.timeRange = 256;
     }
-
-    draw() {
-        let edge = (i) => {
-            ctx.globalAlpha = Math.max(0, this.range - Math.abs(this.time[i] - (performance.now() - this.makeTime)))/this.range;
-            ctx.drawImage(images[12], pos.x, pos.y);
-        }
-        
-        ctx.globalAlpha(1);
-    }
-    
 }
 
 class CastleAttackEffect extends Effect {
     constructor(spos, epos) {
         super();
-        this.pos = spos;
-        this.epos = epos;
+        this.pos = {x:spos.x, y:spos.y};
+        this.epos = {x:epos.x, y:epos.y};
         this.dir = Math.atan2(epos.y - spos.y, epos.x - spos.x);
         this.len = Math.sqrt(Math.pow(epos.y - spos.y, 2) + Math.pow(epos.x - spos.x, 2));
         this.speed = 10;
-        console.log(this.dir);
     }
+}
 
-    move() {
-        if (this.len >= this.speed) {
-            this.pos.x += Math.cos(this.dir)*this.speed;
-            this.pos.y += Math.sin(this.dir)*this.speed;
-            this.len -= this.speed;
+function updateAttackEffect() {
+    for (let obj of effect) {
+        if (obj.constructor === UnitAttackEffect) {
+            if (!isPaused) obj.countTime += performance.now() - obj.beforeTime;
+            obj.beforeTime = performance.now();
         } else {
-            this.pos.x += Math.cos(this.dir)*this.len;
-            this.pos.y += Math.sin(this.dir)*this.len;
-            this.len = 0;
-            this.yet = true;
+            if (isPaused) continue;
+            if (obj.len >= obj.speed) {
+                obj.pos.x += Math.cos(obj.dir) * obj.speed;
+                obj.pos.y += Math.sin(obj.dir) * obj.speed;
+                obj.len -= obj.speed;
+            } else {
+                obj.pos.x += Math.cos(obj.dir) * obj.len;
+                obj.pos.y += Math.sin(obj.dir) * obj.len;
+                obj.len = 0;
+                obj.yet = true;
+            }
         }
     }
+}
 
-    draw() {
-        ctx.save();
-        // 回転の中心に原点を移動する
-        ctx.translate(this.pos.x, this.pos.y);
-        // canvasを回転する
-        ctx.rotate(this.dir);
-        // 画像サイズの半分だけずらして画像を描画する
-        ctx.drawImage(images[11], 0, 0);
-        // コンテキストを元に戻す
-        ctx.restore();
+function drawAttackEffect() {
+    for (let obj of effect) {
+        if (obj.constructor === UnitAttackEffect) {
+            let edge = (i) => {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, obj.timeRange - Math.abs(obj.time[i] - obj.countTime)) / obj.timeRange;
+                ctx.translate(obj.pos.x, obj.pos.y);
+                ctx.rotate(obj.dir[i]);
+                ctx.drawImage(images[12], obj.edgePos[i].x - obj.size[i] / 2, obj.edgePos[i].y - obj.size[i] / 2, obj.size[i], obj.size[i]);
+                ctx.restore();
+            }
+            for (let i = 0; i < obj.num; i++) {
+                edge(i);
+            }
+            if (performance.new - obj.makeTime > 1000) obj.yet = true;
+        } else {
+            console.log(obj);
+            ctx.save();
+            // 回転の中心に原点を移動する
+            ctx.translate(obj.pos.x, obj.pos.y);
+            // canvasを回転する
+            ctx.rotate(obj.dir);
+            // 画像サイズの半分だけずらして画像を描画する
+            ctx.drawImage(images[11], 0, 0);
+            // コンテキストを元に戻す
+            ctx.restore();
+        }
     }
 }
