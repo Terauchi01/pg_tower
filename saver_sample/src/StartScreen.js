@@ -12,7 +12,7 @@ function StartScreen() {
         event.preventDefault();
         console.log('送信されたメッセージ:', message);
 
-        fetch('/saver/api/send-message', {
+        fetch('/components/api/send-message', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
