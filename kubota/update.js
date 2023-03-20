@@ -119,7 +119,7 @@ function dataUpdates() {
     beforeTime = performance.now();
 
     cpuAddUnit(enemy);
-    cpuAddUnit(player);
+    //cpuAddUnit(player);
     //attack
     let damageFlag = false
     if (countTimer >= attackWait) {
