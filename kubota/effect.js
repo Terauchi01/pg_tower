@@ -85,8 +85,9 @@ function drawAttackEffect() {
             ctx.translate(obj.pos.x, obj.pos.y);
             // canvasを回転する
             ctx.rotate(obj.dir);
+            let efSize = 64;
             // 画像サイズの半分だけずらして画像を描画する
-            ctx.drawImage(images[11], 0, 0);
+            ctx.drawImage(images[11], -efSize/2, -efSize/2);
             // コンテキストを元に戻す
             ctx.restore();
         }
