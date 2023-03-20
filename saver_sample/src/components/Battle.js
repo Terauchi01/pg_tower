@@ -1,22 +1,54 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import main, { imgPaths, images, setEventListener, playBGM, dataUpdates, drawImage } from '../kubota/main';
 
-function CPUBattle() {
-    return (
-        <div>
-            <h1>Battle</h1>
-            <ul>
-                <li><Link to="/">StartScreen</Link></li>
-                <li><Link to="/home">Room Match</Link></li>
-                <li><Link to="/room-match">Room Match</Link></li>
-                <li><Link to="/room-password">Room Password</Link></li>
-                <li><Link to="/cpu-battle">CPU Battle</Link></li>
-                <li><Link to="/battle">Battle</Link></li>
-                <li><Link to="/result">Result</Link></li>
-            </ul>
-        </div>
-    );
+function Battle() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+
+    // 画像読み込み
+    Promise.all(imgPaths.map(path => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          resolve(img);
+        };
+        img.onerror = (err) => {
+          reject(err);
+        };
+        img.src = path;
+        images.push(img);
+      });
+    })).then(() => {
+
+      setEventListener();
+      playBGM();
+
+      function mainLoop() {
+        // ここに繰り返したいものを書く
+        // 処理
+        dataUpdates();
+        // 描画
+        drawImage(context);
+
+        // mainloopを回すために必要
+        requestAnimationFrame(mainLoop);
+      }
+
+      // mainloopを回すために必要
+      requestAnimationFrame(mainLoop);
+    }).catch((err) => {
+      console.error("Error loading images:", err);
+    });
+  }, []);
+
+  return (
+    <div>
+      <canvas ref={canvasRef} id="myCanvas"></canvas>
+    </div>
+  );
 }
 
-
-export default CPUBattle;
+export default Battle;
