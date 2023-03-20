@@ -7,9 +7,12 @@ class Effect {
 }
 
 class UnitAttackEffect extends Effect {
-    constructor(pos) {
+    constructor(mpos, tpos) {
         super();
-        this.pos = {x:pos.x, y:pos.y};
+        let mdir = Math.atan2(tpos.y - mpos.y, tpos.x - mpos.x);
+        let len = Math.sqrt(Math.pow(tpos.x - mpos.x, 2) + Math.pow(tpos.y - mpos.y, 2));
+        let efSize = Math.min(64, len);
+        this.pos = {x:mpos.x + Math.cos(mdir)*efSize, y:mpos.y + Math.sin(mdir)*efSize};
         this.num = 10;
         this.time = [];
         this.edgePos = [];

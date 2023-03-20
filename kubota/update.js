@@ -10,8 +10,8 @@ function attackUnit(playerObj1, playerObj2, damageFlag) {
                 obj1.attack(obj2, damageFlag);
                 obj2.attack(obj1, damageFlag);
                 if (damageFlag) {
-                    effect.push(new UnitAttackEffect(obj1.pos));
-                    effect.push(new UnitAttackEffect({ x: canvas.width - obj2.pos.x, y: canvas.height - obj2.pos.y }));
+                    effect.push(new UnitAttackEffect({ x: canvas.width - obj2.pos.x, y: canvas.height - obj2.pos.y }, obj1.pos));
+                    effect.push(new UnitAttackEffect(obj1.pos, { x: canvas.width - obj2.pos.x, y: canvas.height - obj2.pos.y }));
                 }
             }
         } else if (playerObj1.lanes[i].length != 0 && playerObj2.lanes[playerObj2.lanes.length - i - 1].length == 0) {
@@ -20,7 +20,7 @@ function attackUnit(playerObj1, playerObj2, damageFlag) {
                 playerObj1.lanes[i][0].attack(playerObj2, damageFlag);
                 playerObj2.attack(playerObj1.lanes[i][0], damageFlag);
                 if (damageFlag) {
-                    effect.push(new UnitAttackEffect({ x: canvas.width - playerObj2.pos.x, y: canvas.height - playerObj2.pos.y }));
+                    effect.push(new UnitAttackEffect(playerObj1.lanes[i][0].pos, { x: canvas.width - playerObj2.pos.x, y: canvas.height - playerObj2.pos.y }));
                     effect.push(new CastleAttackEffect({ x: canvas.width - playerObj2.pos.x, y: canvas.height - playerObj2.pos.y }, playerObj1.lanes[i][0].pos));
                 }
             }
@@ -30,7 +30,7 @@ function attackUnit(playerObj1, playerObj2, damageFlag) {
                 playerObj2.lanes[playerObj2.lanes.length - i - 1][0].attack(playerObj1, damageFlag);
                 playerObj1.attack(playerObj2.lanes[playerObj2.lanes.length - i - 1][0], damageFlag);
                 if (damageFlag) {
-                    effect.push(new UnitAttackEffect(playerObj1.pos));
+                    effect.push(new UnitAttackEffect({ x: canvas.width - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.x, y: canvas.height - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y }, playerObj1.pos));
                     effect.push(new CastleAttackEffect(playerObj1.pos, { x: canvas.width - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.x, y: canvas.height - playerObj2.lanes[playerObj2.lanes.length - i - 1][0].pos.y }));
                 }
             }
