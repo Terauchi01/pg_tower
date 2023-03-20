@@ -47,6 +47,7 @@ function updateAttackEffect() {
     for (let obj of effect) {
         if (obj.constructor === UnitAttackEffect) {
             if (!isPaused) obj.countTime += performance.now() - obj.beforeTime;
+            if (obj.countTime > obj.timeRandomRange) obj.yet = true;
             obj.beforeTime = performance.now();
         } else {
             if (isPaused) continue;
@@ -78,9 +79,7 @@ function drawAttackEffect() {
             for (let i = 0; i < obj.num; i++) {
                 edge(i);
             }
-            if (performance.new - obj.makeTime > obj.timeRandomRange) obj.yet = true;
         } else {
-            console.log(obj);
             ctx.save();
             // 回転の中心に原点を移動する
             ctx.translate(obj.pos.x, obj.pos.y);

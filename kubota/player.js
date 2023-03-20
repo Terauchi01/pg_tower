@@ -3,7 +3,7 @@ class Player {
         this.playerId = playerID;
         this.hp = 100;
         this.HPMAX = 100;
-        this.myUnitPoint = 0;
+        this.myUnitPoint = 100;
         this.unitCost = 2;
         this.unitPointIncrease = 1;
         this.unitPointIncreaseTick = 1000;

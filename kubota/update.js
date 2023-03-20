@@ -97,8 +97,7 @@ function eraseUnit(playerObj) {
 }
 
 function eraseEffect() {
-    let effect2 = effect.filter(item => item.yet == false);
-    effect = effect2;
+    effect = effect.filter(item => item.yet === false);
 }
 
 //メインで行う処理
@@ -120,7 +119,7 @@ function dataUpdates() {
     beforeTime = performance.now();
 
     cpuAddUnit(enemy);
-    //cpuAddUnit(player);
+    cpuAddUnit(player);
     //attack
     let damageFlag = false
     if (countTimer >= attackWait) {
