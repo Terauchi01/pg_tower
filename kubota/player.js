@@ -16,6 +16,7 @@ class Player {
     }
     addUnit(index, element) {
         if (this.myUnitPoint >= this.unitCost) {
+            playUnitDeploySE();
             this.myUnitPoint -= this.unitCost;
             this.lanes[index].push(element); //末尾にelementを追加
         }
@@ -49,6 +50,7 @@ class Player {
         if (damageFlag) {
             let damage = 1;
             obj.hp -= damage;
+            playCastleAttackSE();
         }
     }
 }

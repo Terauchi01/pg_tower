@@ -78,6 +78,7 @@ function setEventListener() {
             if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(dragSize.height / 2, 2)) {
                 selectNum = index;
                 isDrag = true;
+                playUnitSelectSE();
             }
         }
 
@@ -149,16 +150,19 @@ function setEventListener() {
     document.addEventListener('keydown', function (event) {
         switch (event.key) {
             case '1':
+                if (!isDrag) playUnitSelectSE();
                 isDrag = true;
                 isShortcut = true;
                 selectNum = 0;
                 break;
             case '2':
+                if (!isDrag) playUnitSelectSE();
                 isDrag = true;
                 isShortcut = true;
                 selectNum = 1;
                 break;
             case '3':
+                if (!isDrag) playUnitSelectSE();
                 isDrag = true;
                 isShortcut = true;
                 selectNum = 2;
