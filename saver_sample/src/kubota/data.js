@@ -2,6 +2,20 @@ import { Soldier, Lancer, Cavalry } from './unit';
 import {Player} from './player';
 import { createCanvas } from 'canvas';
 
+import arrowImg from './Image/arrow.png';
+import backgroundImg from './Image/background.png';
+import castleImg from './Image/castle.png';
+import cavalryImg from './Image/cavalry.png';
+import cavalry2Img from './Image/cavalry2.png';
+import frame1Img from './Image/frame1.png';
+import frame2Img from './Image/frame2.png';
+import frame3Img from './Image/frame3.png';
+import lancerImg from './Image/lancer.png';
+import lancer2Img from './Image/lancer2.png';
+import slashImg from './Image/slash.png';
+import soldierImg from './Image/soldier.png';
+import soldier2Img from './Image/soldier2.png';
+
 // Canvas要素の取得
 export const canvas = createCanvas(document.documentElement.scrollWidth,document.documentElement.scrollHeight);
 
@@ -34,8 +48,21 @@ export var isPaused = false;
 export var isEnd = false;
 
 // 画像の読み込み
-export const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/soldier2.png", "Image/lancer2.png", "Image/cavalry2.png", "Image/castle.png", 
-                  "Image/frame1.png", "Image/frame2.png", "Image/frame3.png", "Image/background.png", "Image/arrow.png", "Image/slash.png"];
+export const imgPaths = [
+    arrowImg,
+    backgroundImg,
+    castleImg,
+    cavalryImg,
+    cavalry2Img,
+    frame1Img,
+    frame2Img,
+    frame3Img,
+    lancerImg,
+    lancer2Img,
+    slashImg,
+    soldierImg,
+    soldier2Img,
+];
 
 //画像のインスタンスを保管する配列
 export const images = [];

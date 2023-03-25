@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import soldierImg from './kubota/Image/soldier.png';
 
 function StartScreen() {
     const [message, setMessage] = useState('');
@@ -41,6 +42,7 @@ function StartScreen() {
                 <li><Link to="/battle">Battle</Link></li>
                 <li><Link to="/result">Result</Link></li>
             </ul>
+            <img src={soldierImg} alt="Soldier" />
         </div>
     );
 }
