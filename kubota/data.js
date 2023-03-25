@@ -82,7 +82,7 @@ function setEventListener() {
         //配置するユニットを選択
         if (isPaused) return;
         let checkDrag = (pos, index) => {
-            let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
+            let dx = pos.x - event.pageX, dy = pos.y - event.pageY;
             if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(dragSize.height / 2, 2)) {
                 selectNum = index;
                 isDrag = true;
@@ -104,7 +104,7 @@ function setEventListener() {
             } else {
                 obj = enemy;
             }
-            let dx = pos.x - event.clientX, dy = pos.y - event.clientY;
+            let dx = pos.x - event.pageX, dy = pos.y - event.pageY;
             if (Math.pow(dx, 2) + Math.pow(dy, 2) <= Math.pow(circleSize, 2)) {
                 switch (selectNum) {
                     case 0:
@@ -128,8 +128,8 @@ function setEventListener() {
     });
 
     canvas.addEventListener('mousemove', function (event) {
-        mousePos.x = event.clientX;
-        mousePos.y = event.clientY;
+        mousePos.x = event.pageX;
+        mousePos.y = event.pageY;
     });
 
     canvas.addEventListener('click', function (event) {
