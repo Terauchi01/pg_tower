@@ -1,7 +1,10 @@
 // Canvas要素の取得
 const canvas = document.getElementById("myCanvas");
-canvas.width = document.documentElement.scrollWidth;
-canvas.height = document.documentElement.scrollHeight;
+//canvas.width = document.documentElement.scrollWidth;
+//canvas.height = document.documentElement.scrollHeight;
+canvas.width = 1536;
+canvas.height = 729;
+
 
 //dragに必要な変数
 var isDrag = false;
@@ -44,7 +47,12 @@ const unitSize = { width: 64, height: 64 };
 const castleSize = { width: 256, height: 256 };
 //処理に利用するデータの保管
 const dragSize = { width: 128, height: 128 };
-const unitDir = { left: 338, middle: 270, right: 202 };
+//const unitDir = { left: 338, middle: 270, right: 202 };
+//console.log(canvas.width/canvas.height);
+let cdir = (canvas.width/canvas.height) / (4/3) * 43;
+const unitDir = { left: 270 + cdir, 
+    middle: 270, 
+    right: 270 - cdir };
 const hpSize = { width: 20, height: 4 };
 const castleHpSize = { width: 200, height: 10 };
 const unitPointPos = { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 4 };
