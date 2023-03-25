@@ -16,6 +16,9 @@ function cpuAddUnit(obj) {
             case 2:
                 pos = laneStartPos.right;
                 break;
+            default:
+                console.log('error');
+                break;
         }
         switch (elementType) {
             case 0:
@@ -26,6 +29,9 @@ function cpuAddUnit(obj) {
                 break;
             case 2:
                 obj.addUnit(index, new Cavalry(pos.x, pos.y, obj.playerId, lastUnitId++));
+                break;
+            default:
+                console.log('error');
                 break;
         }
     }

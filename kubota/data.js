@@ -37,7 +37,7 @@ var isEnd = false;
 
 // 画像の読み込み
 const imgPaths = ["Image/MySoldier.png", "Image/MyLancer.png", "Image/MyCavalry.png", "Image/EnemySoldier.png", "Image/EnemyLancer.png", "Image/EnemyCavalry.png", "Image/MyCastle.png",
-                  "Image/Frame1.png", "Image/Frame2.png", "Image/Frame3.png", "Image/Stage.png", "Image/Arrow.png", "Image/Slash1.png"];
+    "Image/Frame1.png", "Image/Frame2.png", "Image/Frame3.png", "Image/Stage.png", "Image/Arrow.png", "Image/Slash1.png"];
 
 //画像のインスタンスを保管する配列
 const images = [];
@@ -49,10 +49,12 @@ const castleSize = { width: 256, height: 256 };
 const dragSize = { width: 128, height: 128 };
 //const unitDir = { left: 338, middle: 270, right: 202 };
 //console.log(canvas.width/canvas.height);
-let cdir = (canvas.width/canvas.height) / (4/3) * 43;
-const unitDir = { left: 270 + cdir, 
-    middle: 270, 
-    right: 270 - cdir };
+let cdir = (canvas.width / canvas.height) / (4 / 3) * 43;
+const unitDir = {
+    left: 270 + cdir,
+    middle: 270,
+    right: 270 - cdir
+};
 const hpSize = { width: 20, height: 4 };
 const castleHpSize = { width: 200, height: 10 };
 const unitPointPos = { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 4 };
@@ -175,6 +177,20 @@ function setEventListener() {
                 isShortcut = true;
                 selectNum = 2;
                 break;
+            case "Esc":
+            case "Escape":
+                if (isPaused) {
+                    player.startUnitPointIncrease();
+                    enemy.startUnitPointIncrease();
+                } else {
+                    player.pauseUnitPointIncrease();
+                    enemy.pauseUnitPointIncrease();
+                }
+                isPaused = !isPaused;
+                break;
+            default:
+                console.log('error');
+                break;
         }
     });
 
@@ -192,6 +208,9 @@ function setEventListener() {
                 case '3':
                     isDrag = false;
                     isShortcut = false;
+                    break;
+                default:
+                    console.log('error');
                     break;
             }
         }

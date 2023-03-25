@@ -52,6 +52,9 @@ function drawUnit(playerObj) {
                 case Cavalry:
                     ctx.drawImage(images[2 + index], px - unitSize.width / 2, py - unitSize.height / 2, unitSize.width, unitSize.height);
                     break;
+                default:
+                    console.log('error');
+                    break;
             }
             drawHP(obj, unitSize, hpSize);
         }
@@ -86,7 +89,7 @@ function drawButton() {
 
     // ボタンに表示するテキストを設定
     ctx.font = '20px Arial';
-    ctx.fillText('Pause', buttonPos.x + 27, buttonPos.y+ 27);
+    ctx.fillText('Pause', buttonPos.x + 27, buttonPos.y + 27);
 }
 
 // 画像を描画する関数
