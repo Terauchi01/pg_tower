@@ -33,8 +33,8 @@ var isPaused = false;
 var isEnd = false;
 
 // 画像の読み込み
-const imgPaths = ["Image/soldier.png", "Image/lancer.png", "Image/cavalry.png", "Image/soldier2.png", "Image/lancer2.png", "Image/cavalry2.png", "Image/castle.png", 
-                  "Image/frame1.png", "Image/frame2.png", "Image/frame3.png", "Image/background.png", "Image/arrow.png", "Image/slash.png"];
+const imgPaths = ["Image/MySoldier.png", "Image/MyLancer.png", "Image/MyCavalry.png", "Image/EnemySoldier.png", "Image/EnemyLancer.png", "Image/EnemyCavalry.png", "Image/castle.png",
+                  "Image/frame1.png", "Image/frame2.png", "Image/frame3.png", "Image/Stage.jpg", "Image/arrow.png", "Image/Slash.png"];
 
 //画像のインスタンスを保管する配列
 const images = [];
