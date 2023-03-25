@@ -105,7 +105,7 @@ function drawImage() {
         drawHP(player, castleSize, castleHpSize);
     }
     if (enemy.hp > 0) {
-        ctx.drawImage(images[6], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSize.height / 2, castleSize.width, castleSize.height);
+        ctx.drawImage(images[13], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSize.height / 2, castleSize.width, castleSize.height);
         drawHP(enemy, castleSize, castleHpSize);
     }
 
