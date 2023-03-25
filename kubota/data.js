@@ -44,7 +44,7 @@ const unitSize = { width: 64, height: 64 };
 const castleSize = { width: 256, height: 256 };
 //処理に利用するデータの保管
 const dragSize = { width: 128, height: 128 };
-const unitDir = { left: 315, middle: 270, right: 225 };
+const unitDir = { left: 338, middle: 270, right: 202 };
 const hpSize = { width: 20, height: 4 };
 const castleHpSize = { width: 200, height: 10 };
 const unitPointPos = { x: canvas.width - dragSize.width, y: canvas.height - dragSize.height * 4 };
