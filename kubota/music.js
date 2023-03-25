@@ -4,10 +4,14 @@ const castleAttackSE = new Audio("music/maoudamashii/maou_se_battle03.mp3");
 const unitSelectSE = new Audio("music/maoudamashii/maou_se_system13.mp3");
 const unitDeploySE = new Audio("music/maoudamashii/maou_se_system10.mp3");
 
+bgm.loop = true;
+bgm.volume = 0.05;
+unitAttackSE.volume = 0.2;
+castleAttackSE.volume = 0.2;
+unitSelectSE.volume = 0.2;
+unitDeploySE.volume = 0.2;
 
 function playBGM() {
-    bgm.loop = true;
-    bgm.volume = 0.05;
     bgm.play();
 }
 
