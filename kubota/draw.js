@@ -44,13 +44,13 @@ function drawUnit(playerObj) {
             }
             switch (obj.constructor) {
                 case Soldier:
-                    ctx.drawImage(images[0 + index], px - unitSize.width / 2, py - unitSize.height / 2);
+                    ctx.drawImage(images[0 + index], px - unitSize.width / 2, py - unitSize.height / 2, unitSize.width, unitSize.height);
                     break;
                 case Lancer:
-                    ctx.drawImage(images[1 + index], px - unitSize.width / 2, py - unitSize.height / 2);
+                    ctx.drawImage(images[1 + index], px - unitSize.width / 2, py - unitSize.height / 2, unitSize.width, unitSize.height);
                     break;
                 case Cavalry:
-                    ctx.drawImage(images[2 + index], px - unitSize.width / 2, py - unitSize.height / 2);
+                    ctx.drawImage(images[2 + index], px - unitSize.width / 2, py - unitSize.height / 2, unitSize.width, unitSize.height);
                     break;
             }
             drawHP(obj, unitSize, hpSize);
@@ -98,11 +98,11 @@ function drawImage() {
 
     //x, yを更新することで画像の座標を変更できる
     if (player.hp > 0) {
-        ctx.drawImage(images[6], player.pos.x - castleSize.width / 2, player.pos.y - castleSize.height / 2);
+        ctx.drawImage(images[6], player.pos.x - castleSize.width / 2, player.pos.y - castleSize.height / 2, castleSize.width, castleSize.height);
         drawHP(player, castleSize, castleHpSize);
     }
     if (enemy.hp > 0) {
-        ctx.drawImage(images[6], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSize.height / 2);
+        ctx.drawImage(images[6], canvas.width - enemy.pos.x - castleSize.width / 2, canvas.height - enemy.pos.y - castleSize.height / 2, castleSize.width, castleSize.height);
         drawHP(enemy, castleSize, castleHpSize);
     }
 
@@ -127,5 +127,5 @@ function drawImage() {
 
     drawAttackEffect();
 
-    if (isDrag) ctx.drawImage(images[selectNum], mousePos.x - unitSize.width / 2, mousePos.y - unitSize.height / 2);
+    if (isDrag) ctx.drawImage(images[selectNum], mousePos.x - unitSize.width / 2, mousePos.y - unitSize.height / 2, unitSize.width, unitSize.height);
 }
