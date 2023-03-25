@@ -91,7 +91,7 @@ function setEventListener() {
         //ユニット配置
         let checkAdd = (pos, index) => {
             let obj;
-            if (myPlayerId == player.playerId) {
+            if (myPlayerId === player.playerId) {
                 obj = player;
             } else {
                 obj = enemy;
@@ -108,6 +108,7 @@ function setEventListener() {
                     case 2:
                         obj.addUnit(index, new Cavalry(pos.x, pos.y, myPlayerId, lastUnitId++));
                         break;
+                    default:
                 }
                 isDrag = false;
             }
@@ -164,6 +165,7 @@ function setEventListener() {
                 isShortcut = true;
                 selectNum = 2;
                 break;
+            default:
         }
     });
 
@@ -182,6 +184,7 @@ function setEventListener() {
                     isDrag = false;
                     isShortcut = false;
                     break;
+                default:
             }
         }
     });

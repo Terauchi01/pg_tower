@@ -40,7 +40,7 @@ export class Player {
     }
 
     pauseUnitPointIncrease() {
-        if (this.remainTime != 0) clearTimeout(this.timeoutID);
+        if (this.remainTime !== 0) clearTimeout(this.timeoutID);
         clearInterval(this.intervalID);
         this.remainTime = this.unitPointIncreaseTick - (performance.now() - this.unitPointIncreaseUpdateTime);
     }

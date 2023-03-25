@@ -1,15 +1,4 @@
 class Player {
-<<<<<<< HEAD
-    constructor(playerID) {
-        this.playerID = playerID;
-        this.castleHP = 100;
-        this.myCost = 100;
-        this.costIncrease = 10;
-        this.lanes = [[], [], []];
-    }
-    addUnit(index, element) {
-        this.lanes[index].push(element); //末尾にelementを追加
-=======
     constructor(playerID, castlePos) {
         this.playerId = playerID;
         this.hp = 100;
@@ -30,14 +19,10 @@ class Player {
             this.myUnitPoint -= this.unitCost;
             this.lanes[index].push(element); //末尾にelementを追加
         }
->>>>>>> kubota
     }
     eraseUnit(index) {
         this.lanes[index].shift(); //配列の最初の要素をpopする
     }
-<<<<<<< HEAD
-};
-=======
 
     startUnitPointIncrease() {
         //ポースする前までの秒数分まつための処理
@@ -55,7 +40,7 @@ class Player {
     }
 
     pauseUnitPointIncrease() {
-        if (this.remainTime != 0) clearTimeout(this.timeoutID);
+        if (this.remainTime !== 0) clearTimeout(this.timeoutID);
         clearInterval(this.intervalID);
         this.remainTime = this.unitPointIncreaseTick - (performance.now() - this.unitPointIncreaseUpdateTime);
     }
@@ -67,4 +52,3 @@ class Player {
         }
     }
 }
->>>>>>> kubota

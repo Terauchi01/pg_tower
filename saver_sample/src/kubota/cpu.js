@@ -19,6 +19,7 @@ export function cpuAddUnit(obj) {
             case 2:
                 pos = laneStartPos.right;
                 break;
+            default:
         }
         switch (elementType) {
             case 0:
@@ -30,6 +31,7 @@ export function cpuAddUnit(obj) {
             case 2:
                 obj.addUnit(index, new Cavalry(pos.x, pos.y, obj.playerId, lastUnitId++));
                 break;
+            default:
         }
     }
 }

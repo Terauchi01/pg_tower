@@ -11,7 +11,7 @@ function drawHP(obj, objSize, barSize) {
         return obj.hp / obj.HPMAX;
     }
     let hpPos = { x: obj.pos.x, y: obj.pos.y };
-    if (obj.playerId != myPlayerId) {
+    if (obj.playerId !== myPlayerId) {
         hpPos.x = canvas.width - hpPos.x;
         hpPos.y = canvas.height - hpPos.y;
     } else {
@@ -43,7 +43,7 @@ function drawUnit(playerObj) {
     for (let ary of playerObj.lanes) {
         for (let obj of ary) {
             let px = obj.pos.x, py = obj.pos.y, index = 0;
-            if (playerObj.playerId != 1) {
+            if (playerObj.playerId !== 1) {
                 px = canvas.width - px;
                 py = canvas.height - py;
                 index = 3;
@@ -58,6 +58,7 @@ function drawUnit(playerObj) {
                 case Cavalry:
                     ctx.drawImage(images[2 + index], px - unitSize.width / 2, py - unitSize.height / 2);
                     break;
+                default:
             }
             drawHP(obj, unitSize, hpSize);
         }
